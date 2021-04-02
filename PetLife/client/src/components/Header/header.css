@@ -1,0 +1,32 @@
+.Header img {
+  width: 30%;
+  padding-top: 15px;
+  padding-left: 20px;
+}
+
+.Header h1 {
+  color: black;
+}
+
+.Header .navbar {
+  justify-content: flex-end;
+}
+.Header .navbar span {
+  margin-right: 15px;
+  padding-right: 30px;
+  border-right: solid 1px #333;
+}
+.Header .navbar .btn {
+  color: black;
+  font-size: 20px;
+}
+.Header .navbar .btn:hover {
+  color: #f77000;
+  text-decoration: none;
+}
+
+.name{
+  font-size: 20px;
+  padding-top: 50px;
+  padding-left: 10px;
+}
