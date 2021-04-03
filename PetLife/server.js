@@ -2,6 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+// const dotnev = require('dotenv')
+// const connectDB = require('./config/db')
+
+// dotnev.config({path: './config/config.env'});
+
+// connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,11 +32,10 @@ if (process.env.NODE_ENV === "production") {
 }
 
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost/dbPet";
+const MONGODB_URI = "mongodb+srv://user:admin@petstorage.hfzwp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
