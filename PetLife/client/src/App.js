@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 //import LoginPage from "./pages/LoginPage";
 import LoginHome from "./components/LoginForm/loginForm"
-import CreateAccountPage from "./pages/CreateAccountPage";
+import CreateAccountForm from "./components/CreateAccountForm/createAccountForm";
 import UserContext from "./context/UserContext";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
@@ -70,7 +70,7 @@ class App extends React.Component {
                 <Route
                   exact
                   path="/createAccount"
-                  component={CreateAccountPage}
+                  component={CreateAccountForm}
                 />
                 <ProtectedRoutes
                   exact

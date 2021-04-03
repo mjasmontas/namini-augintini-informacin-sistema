@@ -50,38 +50,7 @@ class LoginForm extends Component {
             Username and or password is incorrect
           </div>
         ) : null}
-        {/* <form>
-          <div className="form-group">
-            <label htmlFor="exampleInputEmail1">Username</label>
-            <input
-              type="text"
-              name="username"
-              className="form-control"
-              placeholder="Username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="exampleInputPassword1">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder="Password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <button
-            type="submit"
-            onClick={this.handleSubmitEvent}
-            className="btn btn-primary"
-          >
-            Submit
-          </button>
-        </form> */}
-        <section id="content">
+        {<section id="content">
          <form action="">
       <h1>Login Form</h1>
       <div>
@@ -113,7 +82,7 @@ class LoginForm extends Component {
         </div>
       </div>
     </form>
-    </section>
+    </section>}
       </div>
     );
   }
