@@ -1,15 +1,20 @@
 import React from "react";
-import API from "../utils/API2";
+import API from "../../utils/API2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import FileUpload from "../upload/fileUpload";
-import UserContext from "../context/UserContext";
+import FileUpload from "../../upload/fileUpload";
+import UserContext from "../../context/UserContext";
 import axios from "axios";
 
-class CreatePet extends React.Component {
+function randomComponent(props) {
+  return <h1></h1>;
+}
+
+class PetUpdate extends React.Component {
   static contextType = UserContext;
 
   state = {
+    exist:false,
     petName: "",
     nicknames: "",
     image: "",
@@ -45,7 +50,7 @@ class CreatePet extends React.Component {
     console.log(petData);
     let petFamUrl = `/user/${this.context.user.id}/petFamily`;
     axios
-      .post(`/api/user/${this.context.user.id}/createPet`, petData)
+      .put(`/api/user/${this.context.user.id}/updatePet`, petData)
       .then(function() {
         window.location = petFamUrl;
       });
@@ -156,7 +161,7 @@ class CreatePet extends React.Component {
             type="submit"
             className="btn btn-warning"
           >
-            Submit Pet
+            Update Pet
           </button>
         </form>
       </div>
@@ -164,4 +169,4 @@ class CreatePet extends React.Component {
   }
 }
 
-export default CreatePet;
+export default PetUpdate;

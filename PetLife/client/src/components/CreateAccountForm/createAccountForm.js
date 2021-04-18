@@ -5,7 +5,6 @@ import "./createAccountForm.css";
 
 class CreateAccountForm extends Component {
   state = {
-    username: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -23,10 +22,11 @@ class CreateAccountForm extends Component {
 
   handleSubmitEvent = event => {
     event.preventDefault();
-    console.log("Submited");
     axios
       .post("/api/signup", {
-        username: this.state.username,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
         password: this.state.password
       })
       .then(response => {
@@ -34,118 +34,111 @@ class CreateAccountForm extends Component {
         this.props.history.push("/login");
       })
       .catch(err => {
-        console.log(err);
+        console.log(err.response);
       });
   };
 
   render() {
     return (
-      // <div className="CreateAccountForm">
-      //   <form>
-      //     <div className="form-group">
-      //       <label for="exampleInputEmail1">Username</label>
-      //       <input
-      //         type="text"
-      //         name="username"
-      //         className="form-control"
-      //         placeholder="Username"
-      //         value={this.state.username}
-      //         onChange={this.handleInputChange}
-      //       />
-      //     </div>
-      //     <div className="form-group">
-      //       <label for="exampleInputPassword1">Password</label>
-      //       <input
-      //         type="password"
-      //         name="password"
-      //         className="form-control"
-      //         placeholder="Password"
-      //         value={this.state.password}
-      //         onChange={this.handleInputChange}
-      //       />
-      //     </div>
-      //     <div className="form-group">
-      //       <label for="exampleInputPassword1">Confirm Password</label>
-      //       <input
-      //         type="password"
-      //         name="Confirm Password"
-      //         className="form-control"
-      //         placeholder="Password"
-      //         value={this.state.confirmPassword}
-      //         onChange={this.handleInputChange}
-      //       />
-      //       {this.state.password !== this.state.confirmPassword ||
-      //       this.state.confirmPassword === "" ? (
-      //         <small id="emailHelp" className="form-text text-muted">
-      //           The passwords should match
-      //         </small>
-      //       ) : null}
-      //     </div>
-      //     <button
-      //       onClick={this.handleSubmitEvent}
-      //       type="submit"
-      //       className="btn btn-primary"
-      //       disabled={
-      //         this.state.password !== this.state.confirmPassword ||
-      //         this.state.password === ""
-      //       }
-      //     >
-      //       Submit
-      //     </button>
-      //   </form>
-      // </div>
-      <div className="CreateAccountForm">
-        {<section id="content">
-         <form action="">
-      <h1>Create Account</h1>
-      <div>
-        <input 
-          type="text" 
-          name="username" 
-          placeholder="Username" 
-          id="username" 
-          value={this.state.username}
-          onChange={this.handleInputChange} />
-      </div>
-      <div>
-        <input 
-          type="password" 
-          placeholder="Password" 
-          required="" 
-          id="password" 
-          name="password"
-          value={this.state.password}
-          onChange={this.handleInputChange} />
-      </div>
-      <div>
-        <input 
-          type="password" 
-          placeholder="Confirm Password" 
-          required="" 
-          id="password" 
-          name="confirmPassword"
-          value={this.state.confirmPassword}
-          onChange={this.handleInputChange} />
-          {this.state.password !== this.state.confirmPassword ||
+    <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-xl-9 mx-auto">
+        <div class="card card-signin flex-row my-5">
+          <div class="card-img-left d-none d-md-flex">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title text-center">Register</h5>
+            <form class="form-signin">
+            <div class="form-label-group">
+              <input 
+                type="text" 
+                placeholder="First Name" 
+                required="" 
+                class="form-control" 
+                id="firstName" 
+                name="firstName"
+                value={this.state.firstName}
+                onChange={this.handleInputChange} />
+                <label for="firstName">First Name</label>
+              </div>
+
+              <div class="form-label-group">
+              <input 
+                type="text" 
+                placeholder="Last Name" 
+                required="" 
+                class="form-control" 
+                id="lastName" 
+                name="lastName"
+                value={this.state.lastName}
+                onChange={this.handleInputChange} />
+                <label for="lastName">Last Name</label>
+              </div>
+
+              <div class="form-label-group">
+              <input 
+                type="email" 
+                placeholder="Email" 
+                required="" 
+                class="form-control" 
+                id="email" 
+                name="email"
+                value={this.state.email}
+                onChange={this.handleInputChange} />
+                <label for="email">Email</label>
+              </div>
+              
+              <hr/>
+
+              <div class="form-label-group">
+              <input 
+                type="password" 
+                placeholder="Password" 
+                required="" 
+                class="form-control" 
+                id="password" 
+                name="password"
+                value={this.state.password}
+                onChange={this.handleInputChange} />
+                <label for="password">Password</label>
+              </div>
+              
+              <div class="form-label-group">
+              <input 
+                type="password" 
+                placeholder="Confirm Password" 
+                required="" 
+                class="form-control" 
+                id="confirmPassword" 
+                name="confirmPassword"
+                value={this.state.confirmPassword}
+                onChange={this.handleInputChange} />
+                {this.state.password !== this.state.confirmPassword ||
             this.state.confirmPassword === "" }
-      </div>
-      <div>
-        <input 
-        type="submit" 
-        value="Submit"
-        onClick={this.handleSubmitEvent}
-        disabled={
-          this.state.password !== this.state.confirmPassword ||
-          this.state.password === ""
-        } />
-        
-        <div>
-          <a href="/login">Already have an account press here</a>
+                <label for="confirmPassword">Confirm Password</label>
+              </div>
+
+              {/* <div class="text-center"><button type="submit">Registruotis</button></div> */}
+              <div class="text-center">
+              <input 
+                type="submit" 
+                value="Submit"
+                onClick={this.handleSubmitEvent}
+                disabled={
+                  this.state.password !== this.state.confirmPassword ||
+                  this.state.password === ""
+                } />
+              </div>
+              <hr class="my-4"/>
+              <div class="row">
+						    <p>Already have an account? <a href="/login">Login Here</a></p>
+					    </div>
+            </form>
+          </div>
         </div>
       </div>
-    </form>
-    </section>}
-      </div>
+    </div>
+  </div>
     );
   }
 }

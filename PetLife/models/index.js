@@ -15,6 +15,7 @@
 module.exports = {
     User: require("./User"),
     Pet: require("./Pets"),
-    PetSitterMod: require("./PetSitterMod")
+    PetSitterMod: require("./PetSitterMod"),
+    Reservation: require("./Reservation")
 };
 

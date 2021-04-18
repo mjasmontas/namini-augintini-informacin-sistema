@@ -17,6 +17,7 @@ class PetInfo extends React.Component {
     let currentComponent = this;
     axios.get(`/api/user/${this.context.user.id}/petFamily`).then(data => {
       console.log(data);
+      console.log(data.data);
       currentComponent.setState({
         pets: data.data.pets
       });
@@ -56,6 +57,22 @@ class PetInfo extends React.Component {
       });
   };
 
+  updatePet = petId => {
+    // axios.put(`/api/user/${petId}/petFamily`).then(function(res) {
+    //   console.log("pet updated");
+    // });
+    // let currentComponent = this;
+    // axios
+    //   .get(`/api/user/${this.context.user.id}/petFamily`)
+    //   .then(function(res) {
+    //     console.log(res.data);
+    //     currentComponent.setState({
+    //       pets: res.data.pets
+    //     });
+    //   });
+    console.log(petId)
+  };
+
   render() {
     return (
       <div className="petInfoCont">
@@ -74,7 +91,8 @@ class PetInfo extends React.Component {
             temperament={item.temperament}
             diet={item.diet}
             directions={item.directions}
-            deletePetCB={this.deletePet}
+            deletePet={this.deletePet}
+            UpdatePet={this.updatePet}
           />
         ))}
       </div>

@@ -33,7 +33,7 @@ class Visits extends Component {
   componentDidMount() {
     let currentComponent = this;
     axios.get(`/api/user/${this.context.user.id}/petFamily`).then(response => {
-      console.log(response);
+      console.log(response.data.pets);
       currentComponent.setState({
         pets: response.data.pets,
         activePet: {

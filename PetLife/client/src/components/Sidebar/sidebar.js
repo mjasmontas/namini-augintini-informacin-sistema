@@ -1,5 +1,5 @@
 import React from "react";
-import "./sidebar.scss";
+import "./sidebar.css";
 import { NavLink } from "react-router-dom";
 import { Consumer } from "../../context/UserContext";
 
@@ -47,6 +47,14 @@ function Sidebar() {
                 to={`/user/${context.user.id}/petSitters`}
               >
                 Pet Sitter
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                to={`/user/${context.user.id}/reservations`}
+              >
+                Reservation
               </NavLink>
             </li>
           </ul>

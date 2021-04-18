@@ -8,7 +8,7 @@ import Auth from "../../utils/Auth";
 class LoginForm extends Component {
   static contextType = UserContext;
   state = {
-    username: "",
+    email: "",
     password: "",
     err: false
   };
@@ -23,10 +23,12 @@ class LoginForm extends Component {
   handleSubmitEvent = event => {
     event.preventDefault();
     console.log("Submited");
-    const username = this.state.username;
+    const email = this.state.email;
     const password = this.state.password;
-    if (username && password) {
-      Auth.logIn(username, password)
+    console.log(this.state.email,);
+    console.log(this.state.password,);
+    if (email && password) {
+      Auth.logIn(email, password)
         .then(response => {
           console.log(response);
           this.context.setUser(response);
@@ -44,46 +46,57 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div className="LoginForm">
-        {this.state.err ? (
+    <div class="container test">
+      {this.state.err ? (
           <div class="alert alert-danger" role="alert">
-            Username and or password is incorrect
+            Email or password is incorrect
           </div>
         ) : null}
-        {<section id="content">
-         <form action="">
-      <h1>Login Form</h1>
-      <div>
-        <input 
-          type="text" 
-          name="username" 
-          placeholder="Username" 
-          id="username" 
-          value={this.state.username}
-          onChange={this.handleInputChange} />
-      </div>
-      <div>
-        <input 
-          type="password" 
-          placeholder="Password" 
-          required="" 
-          id="password" 
-          name="password"
-          value={this.state.password}
-          onChange={this.handleInputChange} />
-      </div>
-      <div>
-        <input 
-        type="submit" 
-        value="Log in"
-        onClick={this.handleSubmitEvent} />
-        <div>
-          <a href="/createAccount">Register</a>
+        {
+    <div class="row">
+      <div class="col-lg-10 col-xl-9 mx-auto">
+        <div class="card card-signin flex-row my-5">
+          <div class="card-img-left d-none d-md-flex">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title text-center">Log In</h5>
+            <form class="form-signin">
+            <div class="form-label-group">
+              <input 
+                type="text" 
+                placeholder="Email" 
+                required="" 
+                class="form-control" 
+                id="email" 
+                name="email"
+                value={this.state.email}
+                onChange={this.handleInputChange} />
+                <label for="email">Email</label>
+              </div>
+
+              <div class="form-label-group">
+              <input 
+                type="password" 
+                placeholder="Password" 
+                required="" 
+                class="form-control" 
+                id="password" 
+                name="password"
+                value={this.state.password}
+                onChange={this.handleInputChange} />
+                <label for="password">Password</label>
+              </div>
+
+              <div class="text-center"><button type="submit" onClick={this.handleSubmitEvent}>Log In</button></div>
+              <hr class="my-4"/>
+              <a class="d-block text-center mt-2 small" href="/createAccount">Registruotis</a>
+            </form>
+          </div>
         </div>
       </div>
-    </form>
-    </section>}
-      </div>
+    </div>}
+  </div>
+
     );
   }
 }

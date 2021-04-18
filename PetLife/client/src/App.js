@@ -8,6 +8,8 @@ import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Sidebar from "./components/Sidebar/sidebar";
 import Header from "./components/Header/header";
+import Footer from "./components/Footer";
+import PetUpdate from "./components/PetUpdate/petUpdate";
 import Visits from "./pages/Visits";
 import Home from "./pages/Home";
 import Auth from "./utils/Auth";
@@ -17,12 +19,14 @@ import CreatePet from "./pages/CreatePet";
 import AddDetailPage from "./pages/AddDetailPage";
 import PetSitter from "./pages/PetSitter";
 import CreatePetSitter from "./pages/CreatePetSitter";
+import CreateReservation from "./pages/CreateReservation";
 import PrescriptionPage from "./pages/Prescriptions";
 import DetailsPage from "./pages/DetailsPage";
 import PetFamily from "./pages/PetFamily";
+import ReservationInformation from "./pages/Reservation";
 import ComingSoon from "./pages/ComingSoon";
 
-import "./global.scss";
+// import "./global.scss";
 
 class App extends React.Component {
   state = {
@@ -101,8 +105,18 @@ class App extends React.Component {
                 />
                 <ProtectedRoutes
                   exact
+                  path="/user/:id/reservations"
+                  component={ReservationInformation}
+                />
+                <ProtectedRoutes
+                  exact
                   path="/user/:id/pets"
                   component={PetInfo}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/user/:id/updatePet"
+                  component={PetUpdate}
                 />
                 <ProtectedRoutes
                   exact
@@ -140,10 +154,16 @@ class App extends React.Component {
                   path="/user/:id/petSitters/createPetSitter"
                   component={CreatePetSitter}
                 />
+                <ProtectedRoutes
+                  exact
+                  path="/user/:id/createReservation"
+                  component={CreateReservation}
+                />
               </div>
             </div>
           </div>
         </UserContext.Provider>
+        <Footer />
       </Router>
     );
   }

@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import Images from "./Images";
 import Loading from "./Loading";
 import Button from "./Button";
-import "./fileUpload.scss";
+// import "./fileUpload.scss";
 
 class FileUpload extends Component {
   state = {

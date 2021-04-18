@@ -1,5 +1,5 @@
 import React from "react";
-import "./prescriptionFile.scss";
+import "./prescriptionFile.css";
 import { Link } from "react-router-dom";
 
 function PrescriptionFile(props) {

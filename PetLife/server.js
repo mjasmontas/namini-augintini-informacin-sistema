@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 
-const MONGODB_URI = "mongodb+srv://user:admin@petstorage.hfzwp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const MONGODB_URI = 'mongodb+srv://user:admin@saugykla.ncigi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true})

@@ -8,6 +8,8 @@ var db = require("../models");
 const Pet = require("../models/Pets");
 const PetSitter = require("../models/PetSitterMod");
 
+const Reservation = require("../models/Reservation")
+
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
@@ -50,13 +52,13 @@ module.exports = function(app) {
 
   app.post("/api/authenticate", function(req, res) {
     console.log(req.body);
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     User.findOne({
-      username: username
+      email: email
     }).then(function(dbUser) {
       if (!dbUser)
         return res.status(401).json({
-          message: "Username and or password is incorrect"
+          message: "email and or password is incorrect"
         });
       if (dbUser.comparePassword(password)) {
         const token = jwt.sign(
@@ -68,12 +70,12 @@ module.exports = function(app) {
 
         res.json({
           id: dbUser._id,
-          username: dbUser.username,
+          email: dbUser.email,
           token: token
         });
       } else {
         res.status(401).json({
-          message: "Username and or password is incorrect"
+          message: "Email or password is incorrect"
         });
       }
     });
@@ -90,14 +92,14 @@ module.exports = function(app) {
   });
 
   app.get("/api/me", authWare, function(req, res) {
-    res.json({ username: req.user.username, id: req.user._id });
+    res.json({ email: req.user.email, id: req.user._id });
   });
   // testing protected routes. uses custom authWare middle ware to
   // check if the user is authenticated.
   app.get("/api/protected", authWare, function(req, res) {
     const user = req.user;
     res.json({
-      message: user.username + ", should be protected"
+      message: user.email + ", should be protected"
     });
   });
 
@@ -190,10 +192,26 @@ module.exports = function(app) {
     );
   });
 
-  app.get("/api/user/:id/petFamily", function(req, res) {
+  app.put("/api/pet/:id/updatePet", function(req, res) {
+    console.log("pet updated: " + req.params.id)
+    Pet.findByIdAndUpdate(
+        req.params.id,
+        {$set: req.body},
+      function(err, updated) {
+        if (err) {
+          console.log(err);
+          res.send(err);
+        } else {
+          console.log("else: " + updated);
+          res.send(updated);
+        }
+      }
+    );
+  });
+
+  app.get("/api/pet/:id/pet", function(req, res) {
     let id = req.params.id;
-    User.findById(id)
-      .populate("pets")
+    Pet.findById(id)
       .then(response => res.json(response))
       .catch(function(err) {
         console.log(err);
@@ -212,6 +230,7 @@ module.exports = function(app) {
 
   app.post("/api/pets/:id/prescription", function(req, res) {
     const id = req.params.id;
+    console.log(req.body);
     Pet.findByIdAndUpdate(
       id,
       { $push: { prescriptions: req.body } },
@@ -236,4 +255,82 @@ module.exports = function(app) {
         console.log(err);
       });
   });
+  //Reservation
+  app.get("/api/user/:id/reservation", function(req, res) {
+    let id = req.params.id;
+    Reservation.findById(id)
+      .then(response => res.json(response))
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+  app.get("/api/user/:id/reservations", function(req, res) {
+    User.findById(req.params.id)
+      .populate('reservation')
+      .then(response => res.json(response))
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+
+  app.post("/api/user/:id/createReservation", function(req, res) {
+    let id = req.params.id;
+    console.log('a');
+    console.log(id);
+    console.log(req.body);
+    Reservation.create(req.body)
+      .then(function(reservation) {
+        return db.User.findByIdAndUpdate(
+          id,
+          { $push: { reservation: reservation._id } },
+          { new: true }
+        );
+      })
+      .then(() => {
+        res.json({ message: "Reservation created" });
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+
+  app.delete("/api/user/:id/reservation", function(req, res) {
+    let id = req.params.id;
+    console.log(id);
+    Reservation.deleteOne(
+      {
+        _id: id
+      },
+      function(err, removed) {
+        if (err) {
+          console.log(err);
+          res.send(err);
+        } else {
+          console.log(removed);
+          res.send(removed);
+        }
+      }
+    );
+  });
+
+  app.put("/api/user/:id/updateReservation", function(req, res) {
+    let id = req.params.id;
+    console.log(id);
+    console.log(req.body);
+    Reservation.findByIdAndUpdate(
+        id,
+        {$set: req.body},
+        {new:true},
+      function(err, removed) {
+        if (err) {
+          console.log(err);
+          res.send(err);
+        } else {
+          console.log(removed);
+          res.send(removed);
+        }
+      }
+    );
+  });
+
 };

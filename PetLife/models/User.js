@@ -3,7 +3,9 @@ const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 
 const UserSchema = new mongoose.Schema({
-  username: {
+  firstName: String,
+  lastName: String,
+  email: {
     type: String,
     index: {
       unique: true
@@ -20,6 +22,12 @@ const UserSchema = new mongoose.Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "PetSitter"
+    }
+  ],
+  reservation: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Reservation"
     }
   ]
 });

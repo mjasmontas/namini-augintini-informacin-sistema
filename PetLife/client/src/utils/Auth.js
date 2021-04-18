@@ -1,10 +1,10 @@
 import axios from "axios";
 
 function Auth() {
-  function logIn(username, password) {
+  function logIn(email, password) {
     return axios
       .post("/api/authenticate", {
-        username: username,
+        email: email,
         password: password
       })
       .then(response => {

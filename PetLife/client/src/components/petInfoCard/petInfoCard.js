@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import "./petInfoCard.scss";
+import "./petInfoCard.css";
 
 function PetInfoCard(props) {
   // let bday = props.birthday.splice(0, -12)
@@ -55,10 +55,16 @@ function PetInfoCard(props) {
         <div className="col-md-2 text-center buttons">
           <Link
             to=""
-            onClick={props.deletePetCB.bind(this, props.id)}
+            onClick={props.deletePet.bind(this, props.id)}
             className="btn btn-secondary btn-sm"
           >
             Remove
+          </Link>
+          <Link
+            // to={`/user/${user.id}/pets/updatePet`}
+            className="btn btn-secondary btn-sm"
+          >
+            Edit
           </Link>
         </div>
       </div>
