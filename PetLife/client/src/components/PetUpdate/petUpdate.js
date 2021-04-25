@@ -16,14 +16,12 @@ class PetUpdate extends React.Component {
   state = {
     exist:false,
     petName: "",
-    nicknames: "",
     image: "",
-    breed: "",
+    type: "",
     birthday: new Date(),
     allergies: "",
     temperament: "",
-    diet: "",
-    directions: ""
+    size: ""
   };
 
   setFile = filePath => {
@@ -38,13 +36,11 @@ class PetUpdate extends React.Component {
     event.preventDefault();
     const petData = {
       name: this.state.petName,
-      nicknames: this.state.nicknames,
-      breed: this.state.breed,
+      type: this.state.type,
       birthday: this.state.birthday,
       allergies: this.state.allergies,
       temperament: this.state.temperament,
-      diet: this.state.diet,
-      directions: this.state.directions,
+      size: this.state.size,
       image: this.state.image
     };
     console.log(petData);
@@ -84,27 +80,17 @@ class PetUpdate extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Nicknames</label>
-            <input
-              name="nicknames"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.nicknames}
-            />
-          </div>
-          <div className="form-group">
             <label>Picture</label>
             <FileUpload onComplete={this.setFile} />
           </div>
           <div className="form-group">
-            <label>Breed</label>
+            <label>Type</label>
             <input
-              name="breed"
+              name="type"
               type="text"
               className="form-control"
               onChange={this.handleInputChange}
-              value={this.state.breed}
+              value={this.state.type}
             />
           </div>
           <div className="form-group">
@@ -137,23 +123,13 @@ class PetUpdate extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Diet</label>
+            <label>Size</label>
             <input
-              name="diet"
+              name="size"
               type="text"
               className="form-control"
               onChange={this.handleInputChange}
-              value={this.state.diet}
-            />
-          </div>
-          <div className="form-group">
-            <label>Directions</label>
-            <textarea
-              name="directions"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.directions}
+              value={this.state.size}
             />
           </div>
           <button

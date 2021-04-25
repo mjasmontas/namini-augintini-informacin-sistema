@@ -1,11 +1,9 @@
-import React, {Component} from "react";
-import { Form, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import Select from 'react-select'
+import React, {useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import UserContext from "../context/UserContext";
 import axios from "axios";
-import e from "cors";
+import UserContext from "../context/UserContext";
+const { RangePicker } = DatePicker;
 
 class CreateReservation extends React.Component {
   static contextType = UserContext;
@@ -13,27 +11,57 @@ class CreateReservation extends React.Component {
   state = {
     owner: "",
     petOption: [],
+    veterinarians: [],
+    ownerFistName: "",
+    ownerLastName: "",
+    vet: null,
     pet: null,
     petName: "",
-    arrivalDate: Date,
-    departureDate: Date,
     clientNotes: "",
     price: "",
     mounted: false,
     refreshed: false,
+    veterinarianVisit: false,
+    selectVeterinarian: false,
+    veterinarianNote: "",
+    trainerVisit: false,
+    trainerNote: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    today: new Date()
   };
+
   
 
   componentDidMount() {
     let currentComponent = this;
+    let test;
+    this.state.veterinarians = [];
     axios.get(`/api/user/${this.context.user.id}/petFamily`).then(response => {
-      // console.log(response.data.pets);
-      currentComponent.setState({
-        petOption: response.data.pets,
-        mounted: true
-      });
       this.getAllPets();
     });
+    axios.get(`/api/users`)
+    .then(response => {
+      console.log(response.data.length)
+      for (var i = 0; i < response.data.length;i++){
+        if (response.data[i].veterinarian){
+          console.log("sfafsdfbsdbjhsfdbjhsdbjhs")
+          test = {
+            "value": response.data[i].firstName + " " + response.data[i].lastName,
+            "label": response.data[i]._id
+          }
+          this.state.veterinarians.push(test)
+        }
+      }
+    });
+    axios.get(`/api/users/${this.context.user.id}`)
+      .then(response => {
+        this.setState({
+          ownerFistName: response.data.firstName,
+          ownerLastName: response.data.lastName
+        })
+      });
+    console.log(this.state.veterinarians)
   }
   
 
@@ -54,21 +82,12 @@ class CreateReservation extends React.Component {
   })
 };
 
-  getPetName(petId){
-    console.log(petId)
-    axios.get(`/api/pet/${petId}/pet`)
-    .then(response => {
-      this.setState({
-        petName: response.data.name
-      })
-      console.log(response.data.name)
-    })
-  }
-
   componentDidUpdate() {
     if (this.state.mounted == false) {
       if (this.state.refreshed == false) {
         let currentComponent = this;
+        this.state.veterinarians = [];
+        let test;
         axios
           .get(`/api/user/${this.context.user.id}/petFamily`)
           .then(response => {
@@ -82,6 +101,27 @@ class CreateReservation extends React.Component {
               refreshed: true
             });
           });
+        
+        axios.get(`/api/users`)
+        .then(response => {
+          console.log(response.data.length)
+          for (var i = 0; i < response.data.length;i++){
+            if (response.data[i].veterinarian){
+              test = {
+                "value": response.data[i].firstName + " " + response.data[i].lastName,
+                "label": response.data[i]._id
+              }
+              this.state.veterinarians.push(test)
+            }
+          }
+        });
+        axios.get(`/api/users/${this.context.user.id}`)
+          .then(response => {
+            this.setState({
+              ownerFistName: response.data.firstName,
+              ownerLastName: response.data.lastName
+            })
+          })
       } else {
         this.setState({
           mounted: true
@@ -102,13 +142,41 @@ class CreateReservation extends React.Component {
       owner: this.context.user.id,
       pet: this.state.pet,
       petName: this.state.petName,
-      arrivalDate: this.state.arrivalDate,
-      departureDate: this.state.departureDate,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
       clientNotes: this.state.clientNotes,
+      veterinarianVisit: this.state.veterinarianVisit,
+      veterinarianNote: this.state.veterinarianNote,
+      trainerVisit: this.state.trainerVisit,
+      trainerNote: this.state.trainerNote,
       price: this.state.price,
     };
+
+    if (this.state.veterinarianVisit){
+      if (!this.state.selectVeterinarian){
+        if (this.state.veterinarians.length === 1){
+          this.state.vet = this.state.veterinarians[0].label
+        } 
+        else {
+          let size = Math.floor(Math.random() * this.state.veterinarians.length)
+          this.state.vet = this.state.veterinarians[size].label
+        }
+      }
+
+      const veterinarianVisit = {
+        veterinarianId: this.state.vet,
+        pet: this.state.pet,
+        ownerName: this.state.ownerFistName + " " + this.state.ownerLastName,
+        petName: this.state.petName,
+        veterinarianNote: this.state.veterinarianNote,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+      }
+
+      axios
+      .post(`/api/user/${this.state.vet}/veterinarian`, veterinarianVisit)
+    }
     
-    console.log(reservationData);
     let reservationUrl = `/user/${this.context.user.id}/reservations`;
     axios
       .post(`/api/user/${this.context.user.id}/createReservation`, reservationData)
@@ -119,22 +187,8 @@ class CreateReservation extends React.Component {
 
   handleInputChange = event => {
     const { name, value } = event.target;
-    console.log(this.state.petOption)
     this.setState({ [name]: value });
-  };
-
-  handleArrivalDateChange = date => {
-    this.setState({
-      arrivalDate: date
-    });
-    console.log(this.state.arrivalDate);
-  };
-
-  handleDeaprtureDateChange = date => {
-    this.setState({
-      departureDate: date
-    });
-    console.log(this.state.departureDate);
+    console.log(this.state.selectVeterinarian)
   };
 
   handleOptionChange = e => {
@@ -144,7 +198,44 @@ class CreateReservation extends React.Component {
     })
   }
 
+  handleVeterinarianCheckChange = e => {
+    this.setState({
+      veterinarianVisit: e.target.checked
+    })
+  }
+  handleSelectVetChange = e => {
+    this.setState({
+      selectVeterinarian: e.target.checked
+    })
+  }
+
+  handleTrainerCheckChange = e => {
+    console.log(e.target.checked);
+    this.setState({
+      trainerVisit: e.target.checked
+    })
+  }
+
+  handleVetOptionChange = e => {
+    this.setState({
+      vet: e.target.value
+    })
+  }
+
+  setStartDate = date => {
+    this.setState({
+      startDate: date
+    })
+  }
+
+  setEndDate = date => {
+    this.setState({
+      endDate: date
+    })
+  }
+
   render() {
+
     // const {petOption} = this.state;
     // const test = petOption.map(x => {label: x; value: x});
     return (
@@ -159,24 +250,26 @@ class CreateReservation extends React.Component {
               )}
             </select> 
           </div>
-          {/* <div className="form-group">
-            <label>Arrival Date</label>
+          <div>
             <DatePicker
-              name="arrivalDate"
-              className="form-control"
-              onSelect={this.handleArrivalDateChange}
-              selected={this.state.arrivalDate}
+             selected={this.state.startDate}
+             selectsStart
+             startDate={this.state.startDate}
+             minDate={this.state.today}
+             endDate={this.state.endDate}
+             name="startDate"
+             onSelect={this.setStartDate}
+            />
+            <DatePicker
+             selected={this.state.endDate}
+             selectsEnd
+             startDate={this.state.startDate}
+             endDate={this.state.endDate}
+             minDate={this.state.startDate}
+             name="endDate"
+             onSelect={this.setEndDate}
             />
           </div>
-          <div className="form-group">
-            <label>Departure Date</label>
-            <DatePicker
-              name="departureDate"
-              className="form-control"
-              onChange={this.handleDeaprtureDateChange}
-              value={this.state.departureDate}
-            />
-          </div> */}
           <div className="form-group">
             <label>Client Notes</label>
             <input
@@ -187,6 +280,69 @@ class CreateReservation extends React.Component {
               value={this.state.clientNotes}
             />
           </div>
+          <div className="form-group">
+            <label>Veterinarian Visit</label>
+            <input
+              name="veterinarianVisit"
+              type="checkbox"
+              onChange={this.handleVeterinarianCheckChange}
+              checked={this.state.veterinarianVisit}
+            />
+          </div>
+          {this.state.veterinarianVisit ? (
+            <div className="form-group">
+            <label>Do you want to select a veterinarian</label>
+            <input
+              name="veterinarianVisit"
+              type="checkbox"
+              onChange={this.handleSelectVetChange}
+              checked={this.state.selectVeterinarian}
+            />
+          </div>
+          ) : null }
+          {(this.state.selectVeterinarian && this.state.veterinarianVisit) ? (
+            <div className="form-group">
+              <select onChange={this.handleVetOptionChange}>
+                <option value="Select a pet"> -- Select a Veterinarian -- </option>
+                {this.state.veterinarians.map((veterinarian) => 
+                  <option key={veterinarian.label} value={veterinarian.label}>{veterinarian.value}</option>
+                )}
+              </select> 
+            </div>
+          ) : null }
+          {this.state.veterinarianVisit ? (
+            <div className="form-group">
+            <label>Veterinarian Note</label>
+            <input
+              name="veterinarianNote"
+              className="form-control"
+              type="text"
+              onChange={this.handleInputChange}
+              value={this.state.veterinarianNote}
+            />
+          </div>
+          ) : null }
+          <div className="form-group">
+            <label>Trainer Visit</label>
+            <input
+              name="trainerVisit"
+              type="checkbox"
+              onChange={this.handleTrainerCheckChange}
+              checked={this.state.trainerVisit}
+            />
+          </div>
+          {this.state.trainerVisit ? (
+            <div className="form-group">
+            <label>Trainer note</label>
+            <input
+              name="trainerNote"
+              className="form-control"
+              type="text"
+              onChange={this.handleInputChange}
+              value={this.state.trainerNote}
+            />
+          </div>
+          ) : null }
           <div className="form-group">
             <label>Price</label>
             <input

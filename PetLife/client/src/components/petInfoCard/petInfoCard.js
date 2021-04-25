@@ -21,16 +21,10 @@ function PetInfoCard(props) {
               {props.name}
             </p>
           ) : null}
-          {props.nickname ? (
+          {props.type ? (
             <p>
-              <strong>Nickname: </strong>
-              {props.nickname}
-            </p>
-          ) : null}
-          {props.breed ? (
-            <p>
-              <strong>Breed: </strong>
-              {props.breed}
+              <strong>Type: </strong>
+              {props.type}
             </p>
           ) : null}
           {props.birthday ? (
@@ -45,10 +39,10 @@ function PetInfoCard(props) {
               {props.temperament}
             </p>
           ) : null}
-          {props.diet ? (
+          {props.size ? (
             <p>
-              <strong>Diet: </strong>
-              {props.diet}
+              <strong>Size: </strong>
+              {props.size}
             </p>
           ) : null}
         </div>

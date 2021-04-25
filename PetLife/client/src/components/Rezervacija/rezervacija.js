@@ -14,26 +14,49 @@ function Reservation(props) {
         <div className="col-lg-7 text-start">
           {props.petName ? (
             <p>
-              <strong>Nickname: </strong>
+              <strong>Name: </strong>
               {props.petName}
             </p>
           ) : null}
-          {props.arrivalDate ? (
+          {props.startDate ? (
             <p>
-              <strong>Arrival Date: </strong>
-              {props.arrivalDate}
+              <strong>Start Date: </strong>
+              {props.startDate.slice(0, -14)}
             </p>
           ) : null}
-          {props.departureDate ? (
+          {props.endDate ? (
             <p>
-              <strong>Departure Date: </strong>
-              {props.departureDate.slice(0, -14)}
+              <strong>End Date: </strong>
+              {props.endDate.slice(0, -14)}
             </p>
           ) : null}
           {props.clientNotes ? (
             <p>
               <strong>Client Notes: </strong>
               {props.clientNotes}
+            </p>
+          ) : null}
+          {props.veterinarianVisit ? (
+            <p>
+              <strong>Veterianarian Visit is Activated  </strong>
+            </p>
+          ) : null}
+          {props.veterinarianNote ? (
+            <p>
+              <strong>Note For The Veterinarian Visit: </strong>
+              {props.veterinarianNote}
+            </p>
+          ) : null}
+          
+          {props.trainerVisit ? (
+            <p>
+              <strong>Trainer Visit is Activated </strong>
+            </p>
+          ) : null}
+          {props.trainerNote ? (
+            <p>
+              <strong>Note For The Trainer Visit: </strong>
+              {props.trainerNote}
             </p>
           ) : null}
           {props.price ? (

@@ -3,13 +3,15 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import PastVisits from "../PastVisits";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import UserContext from "../../context/UserContext";
 
 class AddVisits extends Component {
   static contextType = UserContext;
 
   state = {
-    date: "",
+    date: new Date(),
     doctorsName: "",
     hospital: ""
   };
@@ -19,7 +21,15 @@ class AddVisits extends Component {
     this.setState({
       [name]: value
     });
+    console.log(this.state.date)
   };
+
+  handleDateChange = d => {
+    this.setState({
+      date: d
+    })
+  }
+
   saveVisit = event => {
     // event.preventDefault();
     let newVisit = {
@@ -45,14 +55,22 @@ class AddVisits extends Component {
           </div>
           <div className="card-body">
             <form>
-              <input
+              <DatePicker
+                selected={this.state.date}
+                onChange={this.handleDateChange}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="h:mm aa"
+              />
+              {/* <input
                 type="text"
                 name="date"
                 className="form-control"
                 placeholder="Date"
                 value={this.state.date}
                 onChange={this.handleInputChange}
-              />
+              /> */}
               <input
                 type="text"
                 name="doctorsName"

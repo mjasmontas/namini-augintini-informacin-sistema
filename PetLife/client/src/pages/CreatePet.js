@@ -1,5 +1,4 @@
 import React from "react";
-import API from "../utils/API2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FileUpload from "../upload/fileUpload";
@@ -11,14 +10,12 @@ class CreatePet extends React.Component {
 
   state = {
     petName: "",
-    nicknames: "",
     image: "",
-    breed: "",
+    type: "",
     birthday: new Date(),
     allergies: "",
     temperament: "",
-    diet: "",
-    directions: ""
+    size: ""
   };
 
   setFile = filePath => {
@@ -33,13 +30,11 @@ class CreatePet extends React.Component {
     event.preventDefault();
     const petData = {
       name: this.state.petName,
-      nicknames: this.state.nicknames,
-      breed: this.state.breed,
+      type: this.state.type,
       birthday: this.state.birthday,
       allergies: this.state.allergies,
       temperament: this.state.temperament,
-      diet: this.state.diet,
-      directions: this.state.directions,
+      size: this.state.size,
       image: this.state.image
     };
     console.log(petData);
@@ -54,14 +49,28 @@ class CreatePet extends React.Component {
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
+    console.log(this.state.type);
   };
 
   handleDateChange = date => {
     this.setState({
       birthday: date
     });
-    console.log(this.state.birthday);
   };
+
+  handleTypeOptionChange = e => {
+    console.log(e.target.value);
+    this.setState({
+      type: e.target.value
+    })
+  }
+
+  handleSizeOptionChange = e => {
+    console.log(e.target.value);
+    this.setState({
+      size: e.target.value
+    })
+  }
 
   render() {
     return (
@@ -79,29 +88,26 @@ class CreatePet extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Nicknames</label>
-            <input
-              name="nicknames"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.nicknames}
-            />
-          </div>
-          <div className="form-group">
             <label>Picture</label>
             <FileUpload onComplete={this.setFile} />
           </div>
-          <div className="form-group">
-            <label>Breed</label>
+          {/* <div className="form-group">
+            <label>Type</label>
             <input
-              name="breed"
+              name="type"
               type="text"
               className="form-control"
               onChange={this.handleInputChange}
-              value={this.state.breed}
+              value={this.state.type}
             />
-          </div>
+          </div> */}
+          <select onChange={this.handleTypeOptionChange}>
+            <option value="Select A Type"> -- Select A Type -- </option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Bird">Bird</option>
+            <option value="Hamster">Hamster</option>
+          </select> 
           <div className="form-group">
             <label>Birthday</label>
             <DatePicker
@@ -132,24 +138,13 @@ class CreatePet extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Diet</label>
-            <input
-              name="diet"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.diet}
-            />
-          </div>
-          <div className="form-group">
-            <label>Directions</label>
-            <textarea
-              name="directions"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.directions}
-            />
+            <label>Size</label>
+            <select onChange={this.handleSizeOptionChange}>
+              <option value="Select A Type"> -- Select A Size -- </option>
+              <option value="Small">Small</option>
+              <option value="Medium">Medium</option>
+              <option value="Large">Large</option>
+          </select> 
           </div>
           <button
             onClick={this.submitData}

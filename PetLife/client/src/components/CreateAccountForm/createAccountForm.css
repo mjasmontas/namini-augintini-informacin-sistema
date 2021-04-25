@@ -113,3 +113,7 @@
 .container button[type="submit"]:hover {
     background: #d01d3f;
   }
+
+.error{
+  color: red;;
+}

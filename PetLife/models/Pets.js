@@ -33,16 +33,12 @@ const petSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  nicknames: {
-    type: String,
-    trim: true
-  },
   image: {
     type: String
   },
-  breed: {
+  type: {
     type: String,
-    trim: true
+    required: true,
   },
   birthday: {
     type: Date
@@ -53,14 +49,26 @@ const petSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  diet: {
-    type: String
+  size: {
+    type: String,
+    required: true
   },
-  directions: { type: String },
   docVisits: [doctorVisitSchema],
   image: {
     type: String
-  }
+  },
+  veterinarianVisit: {
+    type: Boolean
+  },
+  veterinarianNote: {
+    type: String
+  },
+  trainerVisit: {
+    type: Boolean
+  },
+  trainerNote: {
+    type: String
+  },
 });
 
 const Pet = mongoose.model("Pet", petSchema);

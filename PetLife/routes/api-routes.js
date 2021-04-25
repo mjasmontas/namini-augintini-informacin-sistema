@@ -7,8 +7,10 @@ const { petsController, userController } = require("../controllers");
 var db = require("../models");
 const Pet = require("../models/Pets");
 const PetSitter = require("../models/PetSitterMod");
-
-const Reservation = require("../models/Reservation")
+const VeterinarianVisit = require("../models/VeterinarianVisits");
+const trainerVisit = require("../models/petTrainerVisit");
+const Reservation = require("../models/Reservation");
+const Message = require("../models/Message");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -79,6 +81,74 @@ module.exports = function(app) {
         });
       }
     });
+  });
+
+  //get all users
+  app.get("/api/users", function(req, res) {
+    User.find({})
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
+  });
+
+  app.put("/api/admin/:id", function(req, res) {
+    console.log("user: " + req.params.id)
+    User.findByIdAndUpdate(
+      req.params.id,
+      {$set: req.body}, 
+      function(err, updated) {
+        if (err) {
+          console.log(err);
+          res.send(err);
+        } else {
+          console.log("else: " + updated);
+          res.send(updated);
+        }
+      }
+    )
+  });
+
+  app.delete("/api/admin/:id", function(req, res) {
+    let id = req.params.id;
+    User.deleteOne(
+      {
+        _id: id
+      },
+      function(err, removed) {
+        if (err) {
+          console.log(err);
+          res.send(err);
+        } else {
+          console.log(removed);
+          res.send(removed);
+        }
+      }
+    );
+  });
+
+  app.get("/api/user/:id", function(req, res) {
+    let id = req.params.id;
+    User.findById(id)
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
+  });
+
+  app.get("/api/admin/:id", function(req, res) {
+    let id = req.params.id;
+    User.findById(id)
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
   });
 
   app.get("/api/user/:id/petFamily", function(req, res) {
@@ -218,16 +288,6 @@ module.exports = function(app) {
       });
   });
 
-  app.get("/api/user/:id/visits", function(req, res) {
-    Pet.find({})
-      .then(function(found) {
-        res.json(found);
-      })
-      .catch(function(err) {
-        res.status(500).json(err);
-      });
-  });
-
   app.post("/api/pets/:id/prescription", function(req, res) {
     const id = req.params.id;
     console.log(req.body);
@@ -275,14 +335,22 @@ module.exports = function(app) {
 
   app.post("/api/user/:id/createReservation", function(req, res) {
     let id = req.params.id;
-    console.log('a');
-    console.log(id);
-    console.log(req.body);
     Reservation.create(req.body)
       .then(function(reservation) {
         return db.User.findByIdAndUpdate(
           id,
           { $push: { reservation: reservation._id } },
+          { new: true }
+        );
+      })
+      .then(function(reservation) {
+        return db.Pet.findByIdAndUpdate(
+          req.body.pet,
+          { $set: { 
+            veterinarianVisit: req.body.veterinarianVisit,
+            veterinarianNote: req.body.veterinarianNote, 
+            trainerVisit: req.body.trainerVisit,
+            trainerNote: req.body.Note,  } },
           { new: true }
         );
       })
@@ -331,6 +399,128 @@ module.exports = function(app) {
         }
       }
     );
+  });
+
+  //Veterinarian
+  app.post("/api/user/:id/veterinarian", function(req, res) {
+    VeterinarianVisit.create(req.body)
+      .then(function(veterinarianVisits) {
+        return db.User.findByIdAndUpdate(
+          req.body.veterinarianId,
+          { $push: { veterinarianVisits: veterinarianVisits._id } },
+          { new: true }
+        );
+      })
+      .then(function() {
+        res.json({ message: "Visit Saved" });
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+
+  app.get("/api/user/:id/veterinarianVisit", async (req, res) => {
+    await User.findById(req.params.id)
+      .populate('veterinarianVisits')
+      .then(response => res.json(response))
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+
+  //pet Trainer
+  app.post("/api/user/:id/trainer", function(req, res) {
+    trainerVisit.create(req.body)
+      .then(function(trainerVisit) {
+        return db.User.findByIdAndUpdate(
+          req.body.trainerId,
+          { $push: { trainerVisit: trainerVisit._id } },
+          { new: true }
+        );
+      })
+      .then(function() {
+        res.json({ message: "Visit Saved" });
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+
+  app.get("/api/user/:id/trainerVisits", function(req, res) {
+    User.findById(req.params.id)
+      .populate('veterinarianVisits')
+      .then(response => res.json(response))
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+  //Admin Messages
+  app.post("/api/message", function(req, res) {
+    Message.create(req.body)
+    .then(() => {
+      res.json({ message: "Message created" });
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+  })
+
+  app.get("/api/messages", function(req, res) {
+    Message.find({})
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
+  })
+
+  app.delete("/api/admin/messages/:id", function(req, res) {
+    let id = req.params.id;
+    Message.deleteOne(
+      {
+        _id: id
+      },
+      function(err, removed) {
+        if (err) {
+          console.log(err);
+          res.send(err);
+        } else {
+          console.log(removed);
+          res.send(removed);
+        }
+      }
+    );
+  });
+
+  app.get("/api/pet", function(req, res) {
+    Pet.find({})
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
+  });
+
+  app.get("/api/reservations", function(req, res) {
+    Reservation.find({})
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
+  });
+  
+  app.get("/api/veterinarianVisits", function(req, res) {
+    VeterinarianVisit.find({})
+      .then(function(found) {
+        res.json(found);
+      })
+      .catch(function(err) {
+        res.status(500).json(err);
+      });
   });
 
 };

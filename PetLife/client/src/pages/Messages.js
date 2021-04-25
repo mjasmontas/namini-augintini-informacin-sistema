@@ -2,23 +2,23 @@ import React, { Component } from "react";
 // import API from "../utils/API2";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Reservation from "../components/Rezervacija/rezervacija";
+import Message from "../components/Messages/messageForm";
 import UserContext from "../context/UserContext";
 
 class ReservationInformation extends Component {
   static contextType = UserContext;
 
   state = {
-    reservations: [],
+    messages: [],
     mounted: false,
     perjungta: false,
     isLoading: false
   };
   componentDidMount() {
     this.setState({ isLoading: true });
-    axios.get(`/api/user/${this.context.user.id}/reservations`).then(res => {
+    axios.get(`/api/messages`).then(res => {
       this.setState({
-        reservations: res.data.reservation,
+        messages: res.data,
         mounted: true,
         isLoading: false
       });
@@ -28,9 +28,9 @@ class ReservationInformation extends Component {
   componentDidUpdate() {
     if (this.state.mounted === false) {
       if (this.state.perjungta === false) {
-        axios.get(`/api/user/${this.context.user.id}/reservations`).then(res => {
+        axios.get(`/api/messages`).then(res => {
           this.setState({
-            reservations: res.data.reservation,
+            messages: res.data,
             perjungta: true,
             isLoading: false
           });
@@ -44,16 +44,16 @@ class ReservationInformation extends Component {
     }
   }
 
-  cancelReservation = reservationId => {
-    axios.delete(`/api/user/${reservationId}/reservation`).then(function(res) {
-      console.log("Reservation canceled");
+  removeMessage = messageId => {
+    axios.delete(`/api/admin/messages/${messageId}`).then(function(res) {
+      console.log("Message removed");
     });
     let currentComponent = this;
     axios
-      .get(`/api/user/${this.context.user.id}/reservations`)
+      .get(`/api/messages`)
       .then(function(res) {
         currentComponent.setState({
-          reservations: res.data.reservation
+          messages: res.data
         });
       });
   };
@@ -71,40 +71,25 @@ class ReservationInformation extends Component {
       <div className="PetSitter">
         <div className="row">
           <div className="col-6">
-            <h2>Reservation </h2>
-          </div>
-          <div className="col-6 text-right">
-            <Link
-              to={`/user/${user.id}/createReservation`}
-              className="btn btn-warning btn-lg"
-            >
-              Create A Reservation!
-            </Link>
+            <h2>Customer's Messages </h2>
           </div>
         </div>
         <div className="row">
           <div className="col-12">
-            {this.state.reservations < 1 ? (
+            {this.state.messages < 1 ? (
               <div className="alert alert-warning mt-4" role="alert">
-                You have not made any reservations
+                There are no messages
               </div>
             ) : null}
-        {this.state.reservations.map(item => (
-          <Reservation
+        {this.state.messages.map(item => (
+          <Message
             key={item._id}
             id={item._id}
-            pet={item.pet}
-            petName={item.petName}
-            startDate={item.startDate}
-            endDate={item.endDate}
-            clientNotes={item.clientNotes}
-            veterinarianVisit={item.veterinarianVisit}
-            veterinarianNote={item.veterinarianNote}
-            trainerVisit={item.trainerVisit}
-            trainerNote={item.trainerNote}
-            status={item.status}
-            price={item.price}
-            cancelReservation={this.cancelReservation}
+            name={item.name}
+            email={item.email}
+            subject={item.subject}
+            message={item.message}
+            removeMessage={this.removeMessage}
           />
         ))}
           </div>

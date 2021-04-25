@@ -11,6 +11,10 @@ const UserSchema = new mongoose.Schema({
       unique: true
     }
   },
+  phoneNumber: { 
+    type: String, 
+    maxlength: 24 
+  },
   password: String,
   pets: [
     {
@@ -29,7 +33,23 @@ const UserSchema = new mongoose.Schema({
       type: Schema.Types.ObjectId,
       ref: "Reservation"
     }
-  ]
+  ],
+  veterinarianVisits: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "VeterinarianVisits"
+    }
+  ],
+  trainerVisits: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "trainerVisits"
+    }
+  ],
+  veterinarian: Boolean,
+  petTrainer: Boolean,
+  Admin: Boolean,
+  simpleUser: Boolean
 });
 
 UserSchema.methods.comparePassword = function(inputPass) {

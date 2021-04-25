@@ -7,6 +7,12 @@ const reservationSchema = new mongoose.Schema({
     ref: 'user',
     // required: true,
   },
+  // ownerFirstName: {
+  //   type: String
+  // },
+  // ownerLastName: {
+  //   type: String
+  // },
   pet: {
     type: Schema.Types.ObjectId,
     ref: 'pet',
@@ -15,11 +21,11 @@ const reservationSchema = new mongoose.Schema({
   petName: {
     type: String
   },
-  arrivalData: {
+  startDate: {
     type: Date,
     // required: true,
   },
-  departureData: {
+  endDate: {
     type: Date,
     // required: true,
   },
@@ -36,6 +42,18 @@ const reservationSchema = new mongoose.Schema({
       "atsauktas",
       "pabaigtas"
     ],
+  },
+  veterinarianVisit: {
+    type: Boolean
+  },
+  veterinarianNote: {
+    type: String
+  },
+  trainerVisit: {
+    type: Boolean
+  },
+  trainerNote: {
+    type: String
   },
   price: {
     type: Number,

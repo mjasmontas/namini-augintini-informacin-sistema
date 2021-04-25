@@ -85,12 +85,10 @@ class PetInfo extends React.Component {
             id={item._id}
             img={item.image}
             name={item.name}
-            breed={item.breed}
-            nickname={item.nicknames}
+            type={item.type}
             birthday={item.birthday}
             temperament={item.temperament}
-            diet={item.diet}
-            directions={item.directions}
+            size={item.size}
             deletePet={this.deletePet}
             UpdatePet={this.updatePet}
           />

@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { Container, Row, Col, Button} from 'react-bootstrap'
-import Table from '../components/Table'
-import CustomerService from '../services/customers.service'
-import AuthService from '../services/auth.service'
-import CustomerPaymentStatusService from '../services/customePaymentStatus.services'
-import CountryService from '../services/country.service'
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import { Container, Button, Form} from 'react-bootstrap'
+import Select from 'react-select'
+import DatePicker from 'react-datepicker';
 import { Redirect } from "react-router-dom";
 
-class ClientsPage extends Component {
+import "react-datepicker/dist/react-datepicker.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import AuthService from '../services/auth.service'
+import RoleService from '../services/role.service'
+
+class AddUserPage extends Component {
     constructor(props) {
         super(props)
 
@@ -17,68 +18,138 @@ class ClientsPage extends Component {
             userReady: false,
             currentUser: { userEmail: "" },
             data: null,
-            editIdx : -1,
-            isLoading: true,
-            error: null
+            
+            userFirstName : "", 
+            userLastName : "", 
+            userEmail : "", 
+            userPassword: "",
+            employeeAdress : "", 
+            employeePhoneNumber : "",
+            userRolesSelectionOptions : [],
+            userRoles: [],
+            employeeHiredDate : new Date(),
 
+            formError : {
+                userFirstName : null, 
+                userLastName : null, 
+                userEmail: null, 
+                userPassword: null, 
+                employeeAdress: null,
+                employeePhoneNumber: null,
+                userRoles: null,
+                employeeHiredDate: null
+
+            },
+            formErrorFound : null
+      
         }
+        this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
+        this.handleChangeLastName = this.handleChangeLastName.bind(this);
+        this.handleChangeEmail = this.handleChangeEmail.bind(this);
+        this.handleChangePassword = this.handleChangePassword.bind(this);
+        this.handleChangeUserRoles = this.handleChangeUserRoles.bind(this);
+        this.handleChangeEmployeeHiredDate = this.handleChangeEmployeeHiredDate.bind(this);
+        this.handleChangeEmployeeAdress = this.handleChangeEmployeeAdress.bind(this);
+        this.handleChangeEmployeePhoneNumber = this.handleChangeEmployeePhoneNumber.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+
     }
 
-    handleAdd = () => {
-        window.location = '/addCustomer'
+    findSomeErrors = () => {
+        const {formError, userFirstName,  userLastName, userEmail, userPassword, employeeAdress, employeePhoneNumber, userRoles, employeeHiredDate} = this.state;
+
+        if(userFirstName === null) formError.userFirstName = "Šis laukelis privalomas"
+
     }
-    handleRemove = i => {
-        this.setState(state => ({
-          data: state.data.filter((row, j) => j !== i)
-        }));
-      };
-    
-    startEditing = i => {
-    this.setState({ editIdx: i });
-    };
 
-    stopEditing = () => {
-    this.setState({ editIdx: -1 });
-    };
 
-    handleChange = (e, name, i) => {
-        const { value } = e.target;
-        this.setState(state => ({
-            data: state.data.map(
-            (row, j) => (j === i ? { ...row, [name]: value } : row)
-            )
-        }));
-    };
+    handleChangeFirstName = (e) => {
+        console.log(e)
+        this.setState({
+            userFirstName : e.target.value
+        })
+    }
 
-    async componentDidMount(){
+    handleChangeLastName(e) {
+        this.setState({
+            userLastName : e.target.value
+        })
+    }
 
-        this.setState({isLoading: true});
+    handleChangeEmail(e) {
+        this.setState({
+            userEmail: e.target.value
+        })
+    }
+
+    handleChangePassword(e) {
+        this.setState({
+            userPassword: e.target.value
+        })
+    }
+
+    handleChangeUserRoles(e){
+        this.setState({userRoles:e})
+    }
+
+    handleChangeEmployeeHiredDate(e) {
+        this.setState({
+            employeeHiredDate : e
+        })
+    }
+
+    handleChangeEmployeeAdress(e){
+        this.setState({
+            employeeAdress : e.target.value
+        })    
+    }
+
+    handleChangeEmployeePhoneNumber(e){
+        this.setState({
+            employeePhoneNumber : e.target.value
+        })    
+    }
+
+    async onSubmit(e) {
+        e.preventDefault();
+        const user = {
+            userFirstName: this.state.userFirstName,
+            userLastName: this.state.userLastName, 
+            userEmail: this.state.userEmail, 
+            userPassword: this.state.userPassword, 
+            userRoles: this.state.userRoles.map(v => (v.value)), 
+            employeeHiredDate: this.state.employeeHiredDate,
+            employeeAdress: this.state.employeeAdress, 
+            employeePhoneNumber: this.state.employeePhoneNumber
+        }
         
-        console.log("AA ")
-        await CustomerService.getAllCustomers()
-            .then(
-                response => {
-
-                    for(var i = 0; i < response.data.length; i++)
-                    {
-                        response.data[i].countryName = response.data[i].country.countryName; 
-                        response.data[i].customerPaymentStatusName = response.data[i].customerPaymentStatus.customerPaymentStatusName;
-                    }
-                    this.setState({
-                        data: response.data, isLoading: false
-                    })
-                }
-            )
-            .catch(
-                error => this.setState({
-                    error,
-                    isLoading: false
-                })
-            );
+        await AuthService.register(user.userFirstName, user.userLastName, user.userEmail, user.userPassword, user.userRoles,
+            user.employeeHiredDate, user.employeeAdress, user.employeePhoneNumber)
+            .then(res=> console.log(res.data))
+            .catch(err=> console.log(err))
         
-        console.log(this.state.customersData)
-        // this.setState({ data: this.state.customersData})
 
+        this.setState({
+            userFirstName : "", 
+            userLastName : "", 
+            userEmail : "", 
+            userRoles: [],
+            userPassword: "",
+            employeeAdress : "", 
+            employeePhoneNumber : "",
+            userRolesSelectionOptions : [],
+            userRolesId: [],
+            userRolesNames: "", 
+            employeeHiredDate : new Date(),
+        });
+
+        window.location.reload();
+    }
+
+
+    async componentDidMount() {
+
+        this.setState({ data: this.state.usersData})
         const currentUser =  await AuthService.getCurrentUser();
 
         if (!currentUser)
@@ -86,104 +157,93 @@ class ClientsPage extends Component {
             this.setState({ redirect: "/login" });
         }
         this.setState({ currentUser: currentUser, userReady: true })
-        
 
+        this.getUserRoles();
+    }
+
+
+    async getUserRoles(){
+        const res = await RoleService.getAllRoles();
+        const data = res.data
+        const options = data.map(d => ({
+          "label" : d.roleLabel,
+          "value" : d.roleName
+    
+        }))
+
+        this.setState({userRolesSelectionOptions: options})
     }
 
     render() {
 
-        console.log(this.state.data)
-
-        const { currentUser, redirect, error, isLoading } = this.state;
-
-        if (redirect) {
-            return <Redirect to={redirect} />
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
         }
-
-        if (error === true) {
-            return <p>{error.message}</p>;
-          }
-
-        if (isLoading === true) {
-            return <p>Loading...</p>;
-        }
-
       
+        const { currentUser } = this.state;
+        
         return(
-            <Container style={{width: '100%'}}>
-                <h1 className="text-center">
-                    <span className="font-italic">Klientai</span>
-                </h1>
-                <Row>
-                    <Col xs={5} md={5} lg={2}>
-                    <Button className="btn-m btn-secondary btn-block" type="submit" onClick={() => this.handleAdd()}>Pridėti klientą</Button>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <MuiThemeProvider>
-                        <Table
-                            handleRemove={this.handleRemove}
-                            startEditing={this.startEditing}
-                            editIdx={this.state.editIdx}
-                            stopEditing={this.stopEditing}
-                            handleChange={this.handleChange}
-                            data={this.state.data}
-                            header={[
-                                {   name: "Įmones kodas", 
-                                    prop: "customerCompanyCode"
-                                },
-                                {
-                                    name: "Pavadinimas",
-                                    prop: "customerCompanyName"
-                                },
-                                {
-                                    name: "El. paštas",
-                                    prop: "customerEmail"
-                                },
-                                {
-                                    name: "Adresas",
-                                    prop: "customerAdress"
-                                },
-                                {
-                                    name: "Pristatymo adresas", 
-                                    prop: "customerDeliveryAdress1"
-                                },
-                                {
-                                    name: "Gavėjo vardas", 
-                                    prop: "customerDeliveryPersonName"
-                                },
-                                {
-                                    name: "Gavėjo tel. nr.", 
-                                    prop: "customerDeliveryPersonPhoneNumber"
-                                },
-                                {
-                                    name: "PVM mokėtojo kodas", 
-                                    prop: "customerVATCode"
-                                },
-                                {
-                                    name: "Kontaktinio asmens vardas",
-                                    prop: "customerContactPersonName"
-                                }, 
-                                {
-                                    name: "Kontaktinio asmens tel. numeris",
-                                    prop: "customerContactPersonPhoneNumber"
-                                },
-                                {
-                                    name: "Mokėjimų statusas",
-                                    prop: "customerPaymentStatusName"
-                                }, 
-                                {
-                                    name: "Šalis",
-                                    prop: "countryName"
-                                }
-                            ]}
-                        />
-                        </MuiThemeProvider>
-                    </Col>
-                </Row>
+            <Container>
+                    <h1 className="text-center">
+                        <span className="font-italic" style={{fontSize : '75%'}}>Pridėkite naują vartotoją</span>
+                    </h1>
+
+                    <Form onSubmit={this.onSubmit}>
+                
+                        <Form.Group>
+                            <Form.Label>Vartotojo vardas</Form.Label>
+                            <Form.Control placeholder="Įveskite vartotojo vardą" onChange={this.handleChangeFirstName.bind(this)}/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Vartotojo pavardė</Form.Label>
+                            <Form.Control placeholder="Įveskite vartotojo pavardę" onChange={this.handleChangeLastName}/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Vartotojo el. paštas</Form.Label>
+                            <Form.Control placeholder="Įveskite vartotojo el. paštą" onChange={this.handleChangeEmail}/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Slaptažodis</Form.Label>
+                            <Form.Control type="password" placeholder="Įveskite slaptažodį" onChange={this.handleChangePassword}/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Vartotojo prieigos lygis</Form.Label>
+                            <Select options={this.state.userRolesSelectionOptions} onChange={this.handleChangeUserRoles} isMulti />
+
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Darbuotojo pasamdymo data</Form.Label>
+                            <br/>
+                            <DatePicker
+                                selected={ this.state.employeeHiredDate }
+                                onChange={ this.handleChangeEmployeeHiredDate}
+                                name="employeeHiredDate"
+                                dateFormat="MM/dd/yyyy"
+                            />
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Darbuotojo gyvenamosios vietos adresas</Form.Label>
+                            <Form.Control placeholder="Įveskite darbuotojo gyvenamosios vietos adresą" onChange={this.handleChangeEmployeeAdress}/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Darbuotojo telefono numeris</Form.Label>
+                            <Form.Control placeholder="Įveskite darbuotojo telefono numerį" onChange={this.handleChangeEmployeePhoneNumber}/>
+                        </Form.Group>
+
+                        <Button variant="primary" type="submit">
+                            Pridėti
+                        </Button>
+                    </Form>
+                     
             </Container>
         )
     }
 }
-export default ClientsPage;
+export default AddUserPage;

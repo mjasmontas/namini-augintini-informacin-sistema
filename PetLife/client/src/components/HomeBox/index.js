@@ -1,12 +1,43 @@
-import React from "react";
+import Axios from "axios";
+import React, { Component } from "react";
 // import Header from "../components/Header/header";
 // import Footer from "../components/Footer/index";
 // import Sidebar from "../components/Sidebar/sidebar";
 
 import "./style.css";
 
-function HomeBox() {
-    return (
+class HomeBox extends Component {
+  state = {
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  }
+  
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmitEvent = event => {
+    event.preventDefault();
+    const newMessage = {
+      name: this.state.name,
+      email: this.state.email,
+      subject: this.state.subject,
+      message: this.state.message
+    }
+    Axios.post(`/api/message`, newMessage)
+    .then(function() {
+      console.log("message sent")
+      window.location = `/`;
+    });
+  };
+
+  render(){
+  return (
         <div>
         <section id="title">
         <div class="container">
@@ -144,24 +175,55 @@ function HomeBox() {
             <form action="forms/contact.php" method="post" role="form" class="php-email-form">
               <div class="row">
                 <div class="col-md-6 form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required/>
+                  <input 
+                    type="text" 
+                    name="name" 
+                    class="form-control" 
+                    id="name" 
+                    placeholder="Your Name"
+                    value={this.state.name}
+                    onChange={this.handleInputChange}
+                    required/>
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required/>
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    name="email" 
+                    id="email" 
+                    placeholder="Your Email" 
+                    value={this.state.email}
+                    onChange={this.handleInputChange}
+                    required/>
                 </div>
               </div>
               <div class="form-group mt-3">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required/>
+                <input type="text" 
+                  class="form-control" 
+                  name="subject" 
+                  id="subject" 
+                  placeholder="Subject" 
+                  value={this.state.subject}
+                  onChange={this.handleInputChange}
+                  required/>
               </div>
               <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                <textarea 
+                  class="form-control"
+                  name="message"
+                  id="message" 
+                  rows="5" 
+                  placeholder="Message" 
+                  value={this.state.message}
+                  onChange={this.handleInputChange}
+                  required />
               </div>
               <div class="my-3">
                 <div class="loading">Loading</div>
                 <div class="error-message"></div>
                 <div class="sent-message">Your message has been sent. Thank you!</div>
               </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
+              <div class="text-center"><button type="submit" onClick={this.handleSubmitEvent}>Send Message</button></div>
             </form>
 
           </div>
@@ -173,6 +235,7 @@ function HomeBox() {
 
     </div>
     );
+  }
 }
 
 export default HomeBox;

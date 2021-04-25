@@ -10,8 +10,13 @@ import Sidebar from "./components/Sidebar/sidebar";
 import Header from "./components/Header/header";
 import Footer from "./components/Footer";
 import PetUpdate from "./components/PetUpdate/petUpdate";
+import UserUpdate from "./components/UserUpdate/userUpdate";
 import Visits from "./pages/Visits";
+import Messages from "./pages/Messages";
+import Dashboard from "./pages/Dashboard";
+import Users from "./pages/Users";
 import Home from "./pages/Home";
+import VeterinarianVisit from "./pages/VeterinarianVisit";
 import Auth from "./utils/Auth";
 import PetInfo from "./pages/PetInfo";
 
@@ -110,6 +115,31 @@ class App extends React.Component {
                 />
                 <ProtectedRoutes
                   exact
+                  path="/user/:id/veterinarian"
+                  component={VeterinarianVisit}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/admin/dashboard"
+                  component={Dashboard}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/admin/users"
+                  component={Users}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/admin/users/:id"
+                  component={UserUpdate}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/admin/messages"
+                  component={Messages}
+                />
+                <ProtectedRoutes
+                  exact
                   path="/user/:id/pets"
                   component={PetInfo}
                 />
@@ -123,7 +153,6 @@ class App extends React.Component {
                   path="/user/:id/pets/createPet"
                   component={CreatePet}
                 />
-
                 <ProtectedRoutes
                   exact
                   path={`${userHome}/visit/addDetail`}
@@ -131,7 +160,6 @@ class App extends React.Component {
                     <AddDetailPage {...props} pageTitle="document" />
                   )}
                 />
-
                 <ProtectedRoutes
                   exact
                   path="/user/:id/prescription"
