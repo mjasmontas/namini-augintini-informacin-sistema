@@ -1,69 +1,52 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./petInfoCard.css";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardLink,
+  Container,
+  CardFooter,
+  CardTitle,
+  Row,
+  Table,
+  Button,
+  Col,
+  CardImg
+} from "reactstrap";
+import moment from 'moment'
+
+const imgStyle = {
+  maxHeight: 180,
+  maxWidth: 400
+}
 
 function PetInfoCard(props) {
   // let bday = props.birthday.splice(0, -12)
+  const date = moment(props.birthday).format('YYYY-MM-DD')
   const placeholderImg =
     "https://www.missingdogsuk.co.uk/wp-content/plugins/wp-job-manager-resumes/assets/images/candidate.png";
-  return (
-    <div className="PetInfoCard card">
-      <div className="row">
-        <div className="col-12 col-sm-12 col-md-6 col-lg-3 text-center">
-          <div className="petImg">
-            <img src={props.img || placeholderImg}></img>
-          </div>
-        </div>
-        <div className="col-lg-7 text-start">
-          {props.name ? (
-            <p>
-              <strong>Name: </strong>
-              {props.name}
-            </p>
-          ) : null}
-          {props.type ? (
-            <p>
-              <strong>Type: </strong>
-              {props.type}
-            </p>
-          ) : null}
-          {props.birthday ? (
-            <p>
-              <strong>Birthday: </strong>
-              {props.birthday.slice(0, -14)}
-            </p>
-          ) : null}
-          {props.temperament ? (
-            <p>
-              <strong>Temperament: </strong>
-              {props.temperament}
-            </p>
-          ) : null}
-          {props.size ? (
-            <p>
-              <strong>Size: </strong>
-              {props.size}
-            </p>
-          ) : null}
-        </div>
-        <div className="col-md-2 text-center buttons">
-          <Link
-            to=""
-            onClick={props.deletePet.bind(this, props.id)}
-            className="btn btn-secondary btn-sm"
-          >
-            Remove
-          </Link>
-          <Link
-            // to={`/user/${user.id}/pets/updatePet`}
-            className="btn btn-secondary btn-sm"
-          >
-            Edit
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+    return (
+      <Col key={props.id} md={4}>
+        <Card className="text-center">
+        <CardImg top width="20%" top heigth="10%" src={props.image || placeholderImg} style={imgStyle} alt="Card image cap" />
+          <CardBody>
+          <CardTitle tag="p">Vardas: {props.name}</CardTitle>
+            <div className="data">
+              <p className="card-category">Tipas: {props.type}</p>
+              <p className="card-category">Gimimo Data: {date}</p>
+              <p className="card-category">Dydis: {props.size}</p>
+              <p />
+              <hr />
+            </div>
+            <Link to={`/pet/${props.id}`} className="btn btn-primary">Atnaujinti</Link>
+            <CardLink to="" onClick={props.deletePet.bind(this, props.id)}
+            className="btn btn-primary">Ištrinti</CardLink>
+          </CardBody>
+        </Card>
+      </Col>
+    )
 }
 
 export default PetInfoCard;

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
-import axios from "axios";
 import Pet from "../components/Family/index";
+import PetService from "../Services/pet.service";
 
 class PetFamily extends React.Component {
   static contextType = UserContext;
@@ -10,16 +10,18 @@ class PetFamily extends React.Component {
   state = {
     pets: [],
     mounted: false,
-    refreshed: false
+    refreshed: false,
+    isLoading: false
   };
 
   componentDidMount() {
+    this.setState({ isLoading: true });
     if (!this.context.user) return;
-    axios.get(`/api/user/${this.context.user.id}/petFamily`).then(res => {
-      console.log(res.data);
+    PetService.getAllUsersPets(this.context.user.id).then(res => {
       this.setState({
         pets: res.data.pets,
-        mounted: true
+        mounted: true,
+        isLoading: false
       });
     });
   }
@@ -27,12 +29,11 @@ class PetFamily extends React.Component {
   componentDidUpdate() {
     if (this.state.mounted === false) {
       if (this.state.refreshed === false) {
-        console.log("updateRan + petFam");
-        axios.get(`/api/user/${this.context.user.id}/petFamily`).then(res => {
-          console.log(res.data);
+        PetService.getAllUsersPets(this.context.user.id).then(res => {
           this.setState({
             pets: res.data.pets,
-            refreshed: true
+            refreshed: true,
+            isLoading: false
           });
         });
       } else {
@@ -45,6 +46,13 @@ class PetFamily extends React.Component {
 
   render() {
     const { user } = this.context;
+
+    const { isLoading } = this.state;
+ 
+    if (isLoading) {
+      return <p>Loading ...</p>;
+    }
+
     return (
       <div className="row">
         {this.state.pets.map(item => {
@@ -62,7 +70,7 @@ class PetFamily extends React.Component {
                   />
                 </div>
                 <div className="famName">
-                  <p> + Add New Pet</p>
+                  <p> + Prideti nauja Augintini</p>
                 </div>
               </div>
             </Link>

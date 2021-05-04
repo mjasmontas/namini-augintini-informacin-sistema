@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import axios from "axios";
 import "./userUpdate.css";
 import UserContext from "../../context/UserContext";
-import DatePicker from "react-datepicker";
-import moment from 'moment'
-import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
+import UserService from "../../Services/user.service";
 
 
 class UserUpdateForm extends Component {
@@ -17,34 +14,91 @@ class UserUpdateForm extends Component {
     veterinarian: false,
     petTrainer: "",
     simpleUser: "",
+    role: "",
     loading: ''
   };
 
   
   componentDidMount() {
-    axios.get(`/api/admin/${this.props.match.params.id}`).then(res => {
-        this.state.veterinarian = res.data.veterinarian;
-        this.state.petTrainer = res.data.petTrainer;
-        this.state.simpleUser = res.data.simpleUser;
-        this.state.firstName = res.data.firstName
+    UserService.getUser(this.props.match.params.id).then(res => {
+        if (res.data.roles[0] === '6086c27f1c84567930705b43'){
+          this.setState({
+            simpleUser: true,
+            veterinarian: false,
+            petTrainer: false
+          })
+          // this.state.simpleUser = true;
+          // this.state.veterinarian = false;
+          // this.state.petTrainer = false;
+        } else if (res.data.roles[0] === '6086c27f1c84567930705b44'){
+          this.setState({
+            simpleUser: false,
+            veterinarian: false,
+            petTrainer: true
+          })
+          // this.state.simpleUser = false;
+          // this.state.veterinarian = false;
+          // this.state.petTrainer = true;
+        } else if (res.data.roles[0] === '6086c27f1c84567930705b45'){
+          this.setState({
+            simpleUser: false,
+            veterinarian: true,
+            petTrainer: false
+          })
+          // this.state.simpleUser = false;
+          // this.state.veterinarian = true;
+          // this.state.petTrainer = false;
+        }
+
         this.setState({
-            // firstName: res.data.firstName,
+            firstName: res.data.firstName,
             lastName: res.data.lastName,
-            email: res.data.email
+            email: res.data.email,
+            role: res.data.roles[0],
+            mounted: true,
+            isLoading: false
           }, this.fillData());
     });   
   }
 
+  componentDidUpdate() {
+    if (this.state.mounted === false) {
+      if (this.state.refreshed === false) {
+        UserService.getUser(this.props.match.params.id).then(res => {
+          console.log(res.data);
+          this.setState({
+            refreshed: true,
+            isLoading: false
+          }, this.fillData());
+        });
+      } else {
+        this.setState({
+          mounted: true
+        });
+      }
+    }
+  }
+
   fillData(){
-      if (this.state.veterinarian !== true ){
-        this.state.veterinarian = false;
-      }
-      if (this.state.petTrainer !== true ){
-        this.state.petTrainer = false;
-      }
-      if (this.state.simpleUser !== true ){
-        this.state.simpleUser = false;
-      }
+    if (this.state.role === '6086c27f1c84567930705b43'){
+      this.setState({
+        simpleUser: false,
+        veterinarian: false,
+        petTrainer: true
+      })
+    } else if (this.state.role === '6086c27f1c84567930705b44'){
+      this.setState({
+        simpleUser: false,
+        veterinarian: false,
+        petTrainer: true
+      })
+    } else if (this.state.role === '6086c27f1c84567930705b45'){
+      this.setState({
+        simpleUser: false,
+        veterinarian: true,
+        petTrainer: false
+      })
+    }
   }
 
   handleVetChange = e => {
@@ -73,16 +127,26 @@ class UserUpdateForm extends Component {
 
   submitData = e => {
     e.preventDefault();
-      console.log(this.state.veterinarian || this.state.petTrainer || this.state.simpleUser)
+    let roles;
+    console.log(this.state.veterinarian || this.state.petTrainer || this.state.simpleUser)
     const user = {
       veterinarian: this.state.veterinarian,
       petTrainer: this.state.petTrainer,
       simpleUser: this.state.simpleUser
     };
+    if (this.state.veterinarian){
+      roles = ['6086c27f1c84567930705b45']
+    } else if (this.state.petTrainer){
+      roles = ['6086c27f1c84567930705b44']
+    } else if (this.state.simpleUser){
+      roles = ['6086c27f1c84567930705b43']
+    }
+
     if (this.state.veterinarian || this.state.petTrainer || this.state.simpleUser){
-        let userUrl = `/admin/users`;
-       axios
-      .put(`/api/admin/${this.props.match.params.id}`, user)
+       
+      let userUrl = `/admin/users`;
+      console.log(roles)
+      UserService.updateUser(this.props.match.params.id, roles)
       .then(function() {
         window.location = userUrl;
       });
@@ -91,8 +155,7 @@ class UserUpdateForm extends Component {
 
   deleteUser = e => {
     let userUrl = `/admin/users`;
-    axios
-      .delete(`/api/admin/${this.props.match.params.id}`)
+    UserService.deleteUser(this.props.match.params.id)
       .then(function() {
         window.location = userUrl;
       });
@@ -101,6 +164,12 @@ class UserUpdateForm extends Component {
   render() {
 
     const {errors} = this.state;
+
+    const { isLoading } = this.state;
+ 
+    if (isLoading) {
+      return <p>Loading ...</p>;
+    }
 
     return (
         <div>

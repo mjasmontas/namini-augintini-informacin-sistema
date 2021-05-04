@@ -6,6 +6,21 @@ import axios from "axios";
 import UserContext from "../context/UserContext";
 import Visit from "../components/VeterinarianVisits/VeterinarianVisit";
 import moment from 'moment'
+import VeterinarService from "../Services/veterinar.service";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardLink,
+  Container,
+  CardFooter,
+  CardTitle,
+  Row,
+  Table,
+  Button,
+  Col,
+  CardImg
+} from "reactstrap"
 
 class Visits extends Component {
   static contextType = UserContext;
@@ -18,47 +33,15 @@ class Visits extends Component {
   };
 
   componentDidMount() {
-    axios.get(`/api/user/${"6083d0c9dcbd704e24d71ec7"}/veterinarianVisit`).then(response => {
-      // let startTime;
-      // let endTime;
-      // let visitDate;
-      // let s;
-      // let e;
-      // for (var i = 0; i < response.data.veterinarianVisits.length; i++){
-      //   if (i === 0){
-      //     startTime = moment('9:00', 'HH:mm')
-      //     endTime = moment('10:00', 'HH:mm')
-      //   } else if (i == 3){
-      //     startTime = moment('13:00', 'HH:mm')
-      //     endTime = moment('14:00', 'HH:mm')
-      //   } else {
-      //     startTime = startTime.add(1,'hours')
-      //     endTime = endTime.add(1,'hours')
-      //   }
-      //   s = startTime.format('HH:mm')
-      //   e = endTime.format('HH:mm')
-      //   var dateObj = moment(response.data.veterinarianVisits[i].startDate);
-      //   visitDate = dateObj.add(1, 'days').format('YYYY-MM-DD');
-
-      //   const visit = {
-      //     ownerName: response.data.veterinarianVisits[i].petOwner,
-      //     petName: response.data.veterinarianVisits[i].petName,
-      //     date: visitDate,
-      //     sTime: s,
-      //     eTime: e
-      //   }
-        
-      //   this.state.visits.push(visit)
-      //   console.log(this.state.visits)
-      // }
+    this.setState({ isLoading: true });
+    VeterinarService.getAllVetVisits(this.context.user.id)
+    .then(response => {
       this.setState({
         visits: response.data.veterinarianVisits,
-        mounted: true
-      }, this.fixTime);
+        mounted: true,
+        isLoading: false
+      });
     })
-    // this.fixTime();
-    this.state.isLoading = false;
-    // console.log(this.state.visits);
   }
 
   fixTime (){
@@ -90,56 +73,34 @@ class Visits extends Component {
   componentDidUpdate() {
     if (this.state.mounted === false) {
       if (this.state.refreshed === false) {
-        axios.get(`/api/user/${"6083d0c9dcbd704e24d71ec7"}/veterinarianVisit`).then(response => {
-          // let startTime;
-          // let endTime;
-          // let visitDate;
-          // let s;
-          // let e;
-          // this.state.visits = [];
-        
-          // for (var i = 0; i < response.data.veterinarianVisits.length; i++){
-            // if (i === 0){
-            //   startTime = moment('9:00', 'HH:mm')
-            //   endTime = moment('10:00', 'HH:mm')
-            // } else if (i == 3){
-            //   startTime = moment('13:00', 'HH:mm')
-            //   endTime = moment('14:00', 'HH:mm')
-            // } else {
-            //   startTime = startTime.add(1,'hours')
-            //   endTime = endTime.add(1,'hours')
-            // }
-            // s = startTime.format('HH:mm')
-            // e = endTime.format('HH:mm')
-          //   var dateObj = moment(response.data.veterinarianVisits[i].startDate);
-          //   visitDate = dateObj.add(1, 'days').format('YYYY-MM-DD');
-          
-          //   const visit = {
-          //     ownerName: response.data.veterinarianVisits[i].petOwner,
-          //     petName: response.data.veterinarianVisits[i].petName,
-          //     date: visitDate,
-          //     sTime: s,
-          //     eTime: e
-          //   }
-          //   this.state.visits.push(visit)
-          // }
+        VeterinarService.getAllVetVisits(this.context.user.id)
+        .then(response => {
           this.setState({
             visits: response.data.veterinarianVisits,
-            refreshed: true
-          }, this.fixTime);
+            refreshed: true,
+            isLoading: false
+          });
         })
           } else {
             this.setState({
               mounted: true
-            }, this.fixTime);
+            });
           }
         }
-        this.state.isLoading = false;
-        console.log(this.state.visits);
   }
 
-  removeVisit(){
-
+  removeVisit = visitId =>{
+    VeterinarService.deleteVetVisit(visitId)
+    .then(function(res) {
+      console.log("Visit canceled");
+    });
+    let currentComponent = this;
+    VeterinarService.getAllVetVisits(this.context.user.id)
+      .then(function(res) {
+        currentComponent.setState({
+          visits: res.data.trainerVisits
+        });
+      });
   }
 
   render() {
@@ -181,26 +142,36 @@ class Visits extends Component {
     //   </div>
     // );
     return (
-      <div className="visit-table">
-          {this.state.visits.length < 1 ? (
-            <div className="alert alert-warning mt-4" role="alert">
-              This pet doesn't have doctor visits
-            </div>
-          ) : (
-            <table className="table table-striped">
-              <tbody>
-                {this.state.visits.map(result => (
-                  <Visit
-                    key={result._id}
-                    date={result.date}
-                    petName={result.petName}
-                    startTime={result.startTime}
-                  />
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+      <div className="content">
+      <Container fluid>
+        <Container>
+          <h2>Veterinaro vizitai</h2>
+        </Container>
+        <Row>
+        {this.state.visits < 1 ? (
+          <div className="alert alert-warning mt-4" role="alert">
+            Jūs neturite jokių užsakymų
+          </div>
+        ) : null}
+
+        {this.state.visits.map(item => (
+          <Visit
+          key={item._id}
+          id={item._id}
+          ownerName={item.petOwnerName}
+          petName={item.petName}
+          petOwnerPhoneNumber={item.petOwnerPhoneNumber}
+          petType={item.petType}
+          petSize={item.petSize}
+          trainersNote={item.trainersNote}
+          date={item.startDate}
+          removeVisit={this.removeVisit}
+          />
+        ))}
+          </Row>
+          
+          </Container>
+      </div>
     );
   }
 }

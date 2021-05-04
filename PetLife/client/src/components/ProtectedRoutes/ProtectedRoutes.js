@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Redirect } from "react-router-dom";
-import Auth from '../../utils/Auth';
+import AuthService from "../../Services/auth.service";
 
 const ProtectedRoutes = ({component: Component, ...rest}) => (
 	<Route {...rest} render={props => (
-		Auth.isLoggedIn() ? (
+		AuthService.getCurrentUser() ? (
 			<Component {...props} />
 		) : (
 			<Redirect to="/login" />

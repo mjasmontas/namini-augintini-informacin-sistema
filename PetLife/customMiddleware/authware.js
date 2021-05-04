@@ -1,18 +1,140 @@
-const User = require ("../models/User");
+// const User = require ("../models/User");
+// const jwt = require("jsonwebtoken");
+
+// module.exports = function(req, res, next) {
+//   try{
+//     const {authorization} = req.headers;
+//     if (!authorization) throw new Error();
+//     const token = authorization.replace("Bearer ", "");
+//     const decoded = jwt.verify(token, "secretKey");
+
+//     User.findOne({ _id: decoded.data }).then(function(dbUser) {
+//       req.user = dbUser
+//       next();
+//     });
+//   } catch(err) {
+//     res.status(401).json({message: err});
+//   }
+// };
+
 const jwt = require("jsonwebtoken");
+const config = require("../config/auth.config.js");
+const db = require("../models");
+const User = db.user;
+const Role = db.role;
 
-module.exports = function(req, res, next) {
-  try{
-    const {authorization} = req.headers;
-    if (!authorization) throw new Error();
-    const token = authorization.replace("Bearer ", "");
-    const decoded = jwt.verify(token, "secretKey");
+verifyToken = (req, res, next) => {
+  let token = req.headers["x-access-token"];
 
-    User.findOne({ _id: decoded.data }).then(function(dbUser) {
-      req.user = dbUser
-      next();
-    });
-  } catch(err) {
-    res.status(401).json({message: err});
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
   }
+
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    req.userId = decoded.id;
+    next();
+  });
 };
+
+isAdmin = (req, res, next) => {
+  User.findById(req.userId).exec((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+
+    Role.find(
+      {
+        _id: { $in: user.roles }
+      },
+      (err, roles) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].roleName === "admin") {
+            next();
+            return;
+          }
+        }
+
+        res.status(403).send({ message: "Require Admin Role!" });
+        return;
+      }
+    );
+  });
+};
+
+isPetTrainer = (req, res, next) => {
+  User.findById(req.userId).exec((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+
+    Role.find(
+      {
+        _id: { $in: user.roles }
+      },
+      (err, roles) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].roleName === "petTrainer") {
+            next();
+            return;
+          }
+        }
+
+        res.status(403).send({ message: "Require Pet Trainer Role!" });
+        return;
+      }
+    );
+  });
+};
+isVeterinarian = (req, res, next) => {
+  User.findById(req.userId).exec((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+
+    Role.find(
+      {
+        _id: { $in: user.roles }
+      },
+      (err, roles) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+        
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].roleName === "veterinarian") {
+            next();
+            return;
+          }
+        }
+
+        res.status(403).send({ message: "Require Veterinarian Role!" });
+        return;
+      }
+    );
+  });
+};
+
+const authJwt = {
+  verifyToken,
+  isAdmin,
+  isVeterinarian,
+  isPetTrainer
+};
+module.exports = authJwt;

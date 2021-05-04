@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import "./header.css";
 import UserContext from "../../context/UserContext";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Auth from "../../utils/Auth";
+import AuthService from "../../Services/auth.service";
 
 class Header extends Component {
   handleLogOut = () => {
-    Auth.logOut().then(() => {
+    AuthService.logout().then(() => {
       window.location.href = "/";
     });
     // cb missing

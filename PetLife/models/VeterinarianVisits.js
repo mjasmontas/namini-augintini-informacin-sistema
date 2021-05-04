@@ -2,18 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const veterinarianSchema = new mongoose.Schema({
-  veterinarianId: {
-    type: Schema.Types.ObjectId,
-    ref: 'user'
-  },
-  petOwner: {
+  petOwnerName: {
     type: String
   },
-  pet: {
-    type: Schema.Types.ObjectId,
-    ref: 'pet'
+  petOwnerPhoneNumber: {
+    type: Number
   },
   petName: {
+    type: String
+  },
+  petType: {
+    type: String
+  },
+  petSize: {
     type: String
   },
   veterinarianNotes: {
@@ -22,17 +23,6 @@ const veterinarianSchema = new mongoose.Schema({
   },
   startDate: {
       type: Date
-  },
-  endDate: {
-      type: Date
-  },
-  startTime: {
-    type: String,
-    default: ''
-  },
-  endTime: {
-    type: String,
-    default: ''
   }
 });
 

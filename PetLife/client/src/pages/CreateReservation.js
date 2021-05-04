@@ -1,9 +1,13 @@
 import React, {useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
 import UserContext from "../context/UserContext";
-const { RangePicker } = DatePicker;
+import ReservationService from "../Services/reservations.service";
+import PetService from "../Services/pet.service";
+import UserService from "../Services/user.service";
+import VeterinarService from "../Services/veterinar.service";
+import petTrainerService from "../Services/petTrainer.service";
+import "../components/Reservation/reservation.css";
 
 class CreateReservation extends React.Component {
   static contextType = UserContext;
@@ -12,62 +16,37 @@ class CreateReservation extends React.Component {
     owner: "",
     petOption: [],
     veterinarians: [],
+    petTrainers: [],
     ownerFistName: "",
     ownerLastName: "",
+    ownerPhoneNumber: "",
     vet: null,
     pet: null,
     petName: "",
     clientNotes: "",
     price: "",
-    mounted: false,
-    refreshed: false,
     veterinarianVisit: false,
     selectVeterinarian: false,
+    selectTrainer: false,
     veterinarianNote: "",
     trainerVisit: false,
     trainerNote: "",
     startDate: new Date(),
     endDate: new Date(),
-    today: new Date()
+    today: new Date(),
+    mounted: false,
+    refreshed: false,
+    isLoading: false
   };
 
   
 
   componentDidMount() {
+    this.setState({ isLoading: true });
+    let veterinar;
+    let trainer;
     let currentComponent = this;
-    let test;
-    this.state.veterinarians = [];
-    axios.get(`/api/user/${this.context.user.id}/petFamily`).then(response => {
-      this.getAllPets();
-    });
-    axios.get(`/api/users`)
-    .then(response => {
-      console.log(response.data.length)
-      for (var i = 0; i < response.data.length;i++){
-        if (response.data[i].veterinarian){
-          console.log("sfafsdfbsdbjhsfdbjhsdbjhs")
-          test = {
-            "value": response.data[i].firstName + " " + response.data[i].lastName,
-            "label": response.data[i]._id
-          }
-          this.state.veterinarians.push(test)
-        }
-      }
-    });
-    axios.get(`/api/users/${this.context.user.id}`)
-      .then(response => {
-        this.setState({
-          ownerFistName: response.data.firstName,
-          ownerLastName: response.data.lastName
-        })
-      });
-    console.log(this.state.veterinarians)
-  }
-  
-
-  getAllPets(){
-    let currentComponent = this;
-    axios.get(`/api/user/${this.context.user.id}/petFamily`)
+    PetService.getAllUsersPets(this.context.user.id)
     .then(response => {
       // console.log(response.data.pets);
       const pets = response.data.pets.map(pet => ({
@@ -76,50 +55,95 @@ class CreateReservation extends React.Component {
       }));
       currentComponent.setState({
         petOption: pets,
-        mounted: true
+        mounted: true,
+        isLoading: false
       });
-      console.log(this.state.petOption)
   })
-};
+    UserService.getAllUsers()
+    .then(response => {
+      this.state.veterinarians = [];
+      this.state.petTrainers = [];
+      for (var i = 0; i < response.data.length;i++){
+        if (response.data[i].roles[0] === '6086c27f1c84567930705b45'){
+          veterinar = {
+            "value": response.data[i].firstName + " " + response.data[i].lastName,
+            "label": response.data[i]._id
+          }
+          this.state.veterinarians.push(veterinar)
+        }
+      }
+      for (var i = 0; i < response.data.length;i++){
+        if (response.data[i].roles[0] === '6086c27f1c84567930705b44'){
+          trainer = {
+            "value": response.data[i].firstName + " " + response.data[i].lastName,
+            "label": response.data[i]._id
+          }
+          this.state.petTrainers.push(trainer)
+        }
+      }
+    });
+    if (this.context.user.id) {
+      UserService.getUser(this.context.user.id)
+      .then(response => {
+        this.setState({
+          ownerFistName: response.data.firstName,
+          ownerLastName: response.data.lastName,
+          ownerPhoneNumber: response.data.phoneNumber
+        })
+      });
+    }
+    
+
+  }
 
   componentDidUpdate() {
     if (this.state.mounted == false) {
       if (this.state.refreshed == false) {
         let currentComponent = this;
-        this.state.veterinarians = [];
-        let test;
-        axios
-          .get(`/api/user/${this.context.user.id}/petFamily`)
-          .then(response => {
-            console.log(response);
-            const pets = response.data.pets.map(pet => ({
-              "value" : pet.name,
-              "label" : pet._id
-            }))
-            currentComponent.setState({
-              petOption: pets,
-              refreshed: true
-            });
-          });
-        
-        axios.get(`/api/users`)
+        let veterinar;
+        let trainer;
+        PetService.getAllUsersPets(this.context.user.id)
         .then(response => {
-          console.log(response.data.length)
-          for (var i = 0; i < response.data.length;i++){
-            if (response.data[i].veterinarian){
-              test = {
-                "value": response.data[i].firstName + " " + response.data[i].lastName,
-                "label": response.data[i]._id
+          // console.log(response.data.pets);
+          const pets = response.data.pets.map(pet => ({
+            "value" : pet.name,
+            "label" : pet._id
+          }));
+          currentComponent.setState({
+            petOption: pets,
+            refreshed: true,
+            isLoading: false
+          });
+      })
+        UserService.getAllUsers()
+          .then(response => {
+            this.state.veterinarians = [];
+            this.state.petTrainers = [];
+            for (var i = 0; i < response.data.length;i++){
+              if (response.data[i].roles[0] === '6086c27f1c84567930705b45'){
+                veterinar = {
+                  "value": response.data[i].firstName + " " + response.data[i].lastName,
+                  "label": response.data[i]._id
+                }
+                this.state.veterinarians.push(veterinar)
               }
-              this.state.veterinarians.push(test)
             }
-          }
-        });
-        axios.get(`/api/users/${this.context.user.id}`)
+            for (var i = 0; i < response.data.length;i++){
+              if (response.data[i].roles[0] === '6086c27f1c84567930705b44'){
+                trainer = {
+                  "value": response.data[i].firstName + " " + response.data[i].lastName,
+                  "label": response.data[i]._id
+                }
+                this.state.petTrainers.push(trainer)
+              }
+            }
+          });
+        UserService.getUser(this.context.user.id)
           .then(response => {
             this.setState({
               ownerFistName: response.data.firstName,
-              ownerLastName: response.data.lastName
+              ownerLastName: response.data.lastName,
+              ownerPhoneNumber: response.data.phoneNumber
             })
           })
       } else {
@@ -138,19 +162,6 @@ class CreateReservation extends React.Component {
         this.state.petName = petNameAdd[prop].value;
       }
     }
-    const reservationData = {
-      owner: this.context.user.id,
-      pet: this.state.pet,
-      petName: this.state.petName,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
-      clientNotes: this.state.clientNotes,
-      veterinarianVisit: this.state.veterinarianVisit,
-      veterinarianNote: this.state.veterinarianNote,
-      trainerVisit: this.state.trainerVisit,
-      trainerNote: this.state.trainerNote,
-      price: this.state.price,
-    };
 
     if (this.state.veterinarianVisit){
       if (!this.state.selectVeterinarian){
@@ -163,23 +174,29 @@ class CreateReservation extends React.Component {
         }
       }
 
-      const veterinarianVisit = {
-        veterinarianId: this.state.vet,
-        pet: this.state.pet,
-        ownerName: this.state.ownerFistName + " " + this.state.ownerLastName,
-        petName: this.state.petName,
-        veterinarianNote: this.state.veterinarianNote,
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-      }
-
-      axios
-      .post(`/api/user/${this.state.vet}/veterinarian`, veterinarianVisit)
+      VeterinarService.addNewVetVisit(this.state.vet, this.context.user.id, this.state.ownerFistName + " " + this.state.ownerLastName,
+      this.state.pet, this.state.petName, this.state.veterinarianNote, this.state.startDate, this.state.endDate)
     }
     
+    if (this.state.trainerVisit){
+      if (!this.state.selectTrainer){
+        if (this.state.petTrainers.length === 1){
+          this.state.trainer = this.state.petTrainers[0].label
+        } 
+        else {
+          let size = Math.floor(Math.random() * this.state.petTrainers.length)
+          this.state.trainer = this.state.petTrainers[size].label
+        }
+      }
+      
+      petTrainerService.addNewTrainerVisit(this.state.trainer, this.state.ownerFistName + " " + this.state.ownerLastName,
+      this.state.ownerPhoneNumber, this.state.petName, this.state.trainerNote, this.state.startDate, this.state.endDate)
+    } 
+
     let reservationUrl = `/user/${this.context.user.id}/reservations`;
-    axios
-      .post(`/api/user/${this.context.user.id}/createReservation`, reservationData)
+    ReservationService.addNewReservation(this.context.user.id, this.state.pet, this.state.petName, this.state.startDate, 
+        this.state.endDate, this.state.clientNotes, this.state.veterinarianVisit, 
+        this.state.veterinarianNote, this.state.trainerVisit, this.state.trainerNote, this.state.price)
       .then(function() {
         window.location = reservationUrl;
       });
@@ -188,7 +205,6 @@ class CreateReservation extends React.Component {
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    console.log(this.state.selectVeterinarian)
   };
 
   handleOptionChange = e => {
@@ -208,9 +224,14 @@ class CreateReservation extends React.Component {
       selectVeterinarian: e.target.checked
     })
   }
+  
+  handleSelectTrainerChange = e => {
+    this.setState({
+      selectTrainer: e.target.checked
+    })
+  }
 
   handleTrainerCheckChange = e => {
-    console.log(e.target.checked);
     this.setState({
       trainerVisit: e.target.checked
     })
@@ -219,6 +240,13 @@ class CreateReservation extends React.Component {
   handleVetOptionChange = e => {
     this.setState({
       vet: e.target.value
+    })
+  }
+
+  handleTrainerOptionChange = e => {
+    console.log(e.target.value)
+    this.setState({
+      trainer: e.target.value
     })
   }
 
@@ -235,133 +263,163 @@ class CreateReservation extends React.Component {
   }
 
   render() {
+    
+    const { isLoading } = this.state;
+ 
+    if (isLoading) {
+      return <p>Loading ...</p>;
+    }
 
-    // const {petOption} = this.state;
-    // const test = petOption.map(x => {label: x; value: x});
     return (
       <div>
-        <h2 className="mb-4">Create A Reservation</h2>
-        <form>
-          <div className="form-group">
-            <select onChange={this.handleOptionChange}>
-              <option value="Select a pet"> -- Select a pet -- </option>
-              {this.state.petOption.map((pet) => 
-                <option key={pet.label} value={pet.label}>{pet.value}</option>
-              )}
-            </select> 
-          </div>
-          <div>
-            <DatePicker
-             selected={this.state.startDate}
-             selectsStart
-             startDate={this.state.startDate}
-             minDate={this.state.today}
-             endDate={this.state.endDate}
-             name="startDate"
-             onSelect={this.setStartDate}
-            />
-            <DatePicker
-             selected={this.state.endDate}
-             selectsEnd
-             startDate={this.state.startDate}
-             endDate={this.state.endDate}
-             minDate={this.state.startDate}
-             name="endDate"
-             onSelect={this.setEndDate}
-            />
-          </div>
-          <div className="form-group">
-            <label>Client Notes</label>
-            <input
-              name="clientNotes"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.clientNotes}
-            />
-          </div>
-          <div className="form-group">
-            <label>Veterinarian Visit</label>
-            <input
-              name="veterinarianVisit"
-              type="checkbox"
-              onChange={this.handleVeterinarianCheckChange}
-              checked={this.state.veterinarianVisit}
-            />
-          </div>
-          {this.state.veterinarianVisit ? (
-            <div className="form-group">
-            <label>Do you want to select a veterinarian</label>
-            <input
-              name="veterinarianVisit"
-              type="checkbox"
-              onChange={this.handleSelectVetChange}
-              checked={this.state.selectVeterinarian}
-            />
-          </div>
-          ) : null }
-          {(this.state.selectVeterinarian && this.state.veterinarianVisit) ? (
-            <div className="form-group">
-              <select onChange={this.handleVetOptionChange}>
-                <option value="Select a pet"> -- Select a Veterinarian -- </option>
-                {this.state.veterinarians.map((veterinarian) => 
-                  <option key={veterinarian.label} value={veterinarian.label}>{veterinarian.value}</option>
-                )}
-              </select> 
+        <div>
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Sukurti Rezervaciją</h4>
+                </div>
+                    <div class="col-md-12">
+                      <label class="labels">Palikimo Data</label>
+                      <DatePicker
+                        wrapperClassName="datePicker"
+                        selected={this.state.startDate}
+                        selectsStart
+                        startDate={this.state.startDate}
+                        minDate={this.state.today}
+                        endDate={this.state.endDate}
+                        name="startDate"
+                        onSelect={this.setStartDate}
+                       />
+                       <DatePicker
+                        wrapperClassName="datePicker"
+                        selected={this.state.endDate}
+                        selectsEnd
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
+                        minDate={this.state.startDate}
+                        name="endDate"
+                        onSelect={this.setEndDate}
+                       />
+                      </div>
+                    <div class="col-md-12">
+                      <label class="labels">Pasirinkite Augintinį</label>
+                      <select className="optionSize" onChange={this.handleOptionChange}>
+                      <option value="Select a pet"> -- Pasirinkite augintini -- </option>
+                      {this.state.petOption.map((pet) => 
+                        <option key={pet.label} value={pet.label}>{pet.value}</option>
+                      )}
+                      </select> 
+                    </div>
+                    <div class="col-md-12">
+                    <label>Ar norite pasirinkti Veterinaro Visitą?</label>
+                      <input
+                        name="veterinarianVisit"
+                        type="checkbox"
+                        onChange={this.handleVeterinarianCheckChange}
+                        checked={this.state.veterinarianVisit}
+                      />
+                      </div>
+                      <div className="col-md-12">
+                      {this.state.veterinarianVisit ? (
+                        <div className="form-group">
+                        <label>Ar norite pasirinkti veterinarą?</label>
+                        <input
+                          name="veterinarianVisit"
+                          type="checkbox"
+                          onChange={this.handleSelectVetChange}
+                          checked={this.state.selectVeterinarian}
+                        />
+                        </div>
+                        ) : null }
+                      </div>
+                      <div className="col-md-12">
+                      {(this.state.selectVeterinarian && this.state.veterinarianVisit) ? (
+                        <div className="form-group">
+                          <label className="workers">Veterinaras: </label>
+                          <select onChange={this.handleVetOptionChange}>
+                            <option value="Select a pet"> -- Pasirinkti Veterinarą -- </option>
+                            {this.state.veterinarians.map((veterinarian) => 
+                              <option key={veterinarian.label} value={veterinarian.label}>{veterinarian.value}</option>
+                            )}
+                          </select> 
+                          </div>
+                        ) : null }
+                      </div>
+                      {this.state.veterinarianVisit ? (
+                        <div className="col-md-12">
+                        <label>Užrašai veterinarui</label>
+                        <input
+                          name="veterinarianNote"
+                          className="form-control"
+                          type="text"
+                          onChange={this.handleInputChange}
+                          value={this.state.veterinarianNote}
+                        />
+                        </div>
+                        ) : null }
+                    <div class="col-md-12">
+                      <label>Ar norite pasirinkti augintinio trenerio visitą?</label>
+                      <input
+                        name="trainerVisit"
+                        type="checkbox"
+                        onChange={this.handleTrainerCheckChange}
+                        checked={this.state.trainerVisit}
+                      />
+                      </div>
+                      <div className="col-md-12">
+                      {this.state.trainerVisit ? (
+                        <div>
+                        <label>Ar norite pasirinkti trenerį?</label>
+                        <input
+                          name="veterinarianVisit"
+                          type="checkbox"
+                          onChange={this.handleSelectTrainerChange}
+                          checked={this.state.selectTrainer}
+                        />
+                        </div>
+                        ) : null }
+                      </div>
+                      <div className="col-md-12">
+                      {(this.state.trainerVisit && this.state.selectTrainer) ? (
+                        <div className="form-group">
+                        <label className="workers">Augintinio Treneris: </label>
+                          <select onChange={this.handleTrainerOptionChange}>
+                            <option value="Select a pet"> -- Pasirinkite trenerį -- </option>
+                            {this.state.petTrainers.map((trainer) => 
+                              <option key={trainer.label} value={trainer.label}>{trainer.value}</option>
+                            )}
+                          </select> 
+                        </div>
+                      ) : null }
+                      </div>
+                      <div className="col-md-12">
+                      {this.state.trainerVisit ? (
+                        <div>
+                        <label>Užrašai Augintinio treneriui</label>
+                        <input
+                          name="trainerNote"
+                          className="form-control"
+                          type="text"
+                          onChange={this.handleInputChange}
+                          value={this.state.trainerNote}
+                        />
+                      </div>
+                      ) : null }
+                      </div>
+                      <hr />
+                        <div class="col-md-12">
+                        <label>Kaina</label>
+                          <input
+                            name="price"
+                            type="text"
+                            className="form-control"
+                            onChange={this.handleInputChange}
+                            value={this.state.price}
+                          />
+                        </div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" onClick={this.submitData} type="button">Sukurti rezervaiją</button></div>
             </div>
-          ) : null }
-          {this.state.veterinarianVisit ? (
-            <div className="form-group">
-            <label>Veterinarian Note</label>
-            <input
-              name="veterinarianNote"
-              className="form-control"
-              type="text"
-              onChange={this.handleInputChange}
-              value={this.state.veterinarianNote}
-            />
-          </div>
-          ) : null }
-          <div className="form-group">
-            <label>Trainer Visit</label>
-            <input
-              name="trainerVisit"
-              type="checkbox"
-              onChange={this.handleTrainerCheckChange}
-              checked={this.state.trainerVisit}
-            />
-          </div>
-          {this.state.trainerVisit ? (
-            <div className="form-group">
-            <label>Trainer note</label>
-            <input
-              name="trainerNote"
-              className="form-control"
-              type="text"
-              onChange={this.handleInputChange}
-              value={this.state.trainerNote}
-            />
-          </div>
-          ) : null }
-          <div className="form-group">
-            <label>Price</label>
-            <input
-              name="price"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.price}
-            />
-          </div>
-          <button
-            onClick={this.submitData}
-            type="submit"
-            className="btn btn-warning"
-          >
-            Create A Reservation
-          </button>
-        </form>
-      </div>
+            </div>
+        </div>
     );
   }
 }

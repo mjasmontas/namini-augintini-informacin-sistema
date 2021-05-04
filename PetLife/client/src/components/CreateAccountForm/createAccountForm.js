@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
 import "./createAccountForm.css";
-import DatePicker from "react-datepicker";
-import moment from 'moment'
-
+import AuthService from "../../Services/auth.service";
 
 const validEmailRegex = 
       RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
@@ -25,6 +22,7 @@ class CreateAccountForm extends Component {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
+    userRoles: ["user"],
     errors: {
       firstName: '',
       lastName: '',
@@ -74,23 +72,20 @@ class CreateAccountForm extends Component {
 
     this.setState({errors, [name]: value}, ()=> {
       console.log(errors)
-      console.log(this.state.phoneNumber)
   })
   };
   
   handleSubmitEvent = event => {
     event.preventDefault();
     if(validateForm(this.state.errors)) {
-      axios
-      .post("/api/signup", {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        password: this.state.password,
-        veterinarian: false,
-        petTrainer: false,
-        simpleUser: true
-      })
+      AuthService.register (
+        this.state.firstName,
+        this.state.lastName,
+        this.state.email,
+        this.state.phoneNumber,
+        this.state.password,
+        this.state.userRoles
+      )
       .then(response => {
         console.log(response.data);
         this.props.history.push("/login");

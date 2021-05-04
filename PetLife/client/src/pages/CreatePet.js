@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FileUpload from "../upload/fileUpload";
 import UserContext from "../context/UserContext";
-import axios from "axios";
+import PetService from "../Services/pet.service";
 
 class CreatePet extends React.Component {
   static contextType = UserContext;
@@ -15,7 +15,13 @@ class CreatePet extends React.Component {
     birthday: new Date(),
     allergies: "",
     temperament: "",
-    size: ""
+    size: "",
+    errors: {
+      petName: '',
+      type: '',
+      birthday: '',
+      size: ''
+    }
   };
 
   setFile = filePath => {
@@ -28,19 +34,10 @@ class CreatePet extends React.Component {
 
   submitData = event => {
     event.preventDefault();
-    const petData = {
-      name: this.state.petName,
-      type: this.state.type,
-      birthday: this.state.birthday,
-      allergies: this.state.allergies,
-      temperament: this.state.temperament,
-      size: this.state.size,
-      image: this.state.image
-    };
-    console.log(petData);
     let petFamUrl = `/user/${this.context.user.id}/petFamily`;
-    axios
-      .post(`/api/user/${this.context.user.id}/createPet`, petData)
+    console.log(this.state.type)
+    PetService
+      .addNewPet(this.context.user.id, this.state.image, this.state.petName, this.state.type, this.state.birthday, this.state.allergies, this.state.temperament, this.state.size)
       .then(function() {
         window.location = petFamUrl;
       });
@@ -75,10 +72,10 @@ class CreatePet extends React.Component {
   render() {
     return (
       <div>
-        <h2 className="mb-4">New Pet</h2>
+        <h2 className="mb-4">Naujas Augintinis</h2>
         <form>
           <div className="form-group">
-            <label>Pet Name</label>
+            <label>Augintinio Vardas</label>
             <input
               name="petName"
               type="text"
@@ -88,28 +85,21 @@ class CreatePet extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Picture</label>
+            <label>Nuotrauka</label>
             <FileUpload onComplete={this.setFile} />
           </div>
-          {/* <div className="form-group">
-            <label>Type</label>
-            <input
-              name="type"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.type}
-            />
-          </div> */}
-          <select onChange={this.handleTypeOptionChange}>
-            <option value="Select A Type"> -- Select A Type -- </option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-            <option value="Bird">Bird</option>
-            <option value="Hamster">Hamster</option>
-          </select> 
+          <div class="col-md-12">
+            <label>Augintinio Tipas</label>
+            <select className="optionSize" onChange={this.handleTypeOptionChange}>
+            <option value="Select a pet"> -- Pasirinkite Tipą -- </option>
+            <option value="Šuo">Šuo</option>
+            <option value="Katė">Katė</option>
+            <option value="Paukštis">Paukštis</option>
+            <option value="Žiurkėnas">Žiurkėnas</option>
+            </select> 
+          </div>
           <div className="form-group">
-            <label>Birthday</label>
+            <label>Gimimo Data</label>
             <DatePicker
               name="bday"
               className="form-control"
@@ -118,7 +108,7 @@ class CreatePet extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Allergies</label>
+            <label>Alergijos</label>
             <input
               name="allergies"
               type="text"
@@ -128,7 +118,7 @@ class CreatePet extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Temperament</label>
+            <label>Temperamentas</label>
             <input
               name="temperament"
               type="text"
@@ -137,21 +127,21 @@ class CreatePet extends React.Component {
               value={this.state.temperament}
             />
           </div>
-          <div className="form-group">
-            <label>Size</label>
-            <select onChange={this.handleSizeOptionChange}>
-              <option value="Select A Type"> -- Select A Size -- </option>
-              <option value="Small">Small</option>
-              <option value="Medium">Medium</option>
-              <option value="Large">Large</option>
-          </select> 
+          <div class="col-md-12">
+            <label>Augintinio dydis</label>
+            <select className="optionSize" onChange={this.handleSizeOptionChange}>
+            <option value="Select a pet"> -- Pasirinkite Dydi -- </option>
+            <option value="Mažas">Mažas</option>
+            <option value="Vidutinis">Vidutinis</option>
+            <option value="Didelis">Didelis</option>
+            </select> 
           </div>
           <button
             onClick={this.submitData}
             type="submit"
-            className="btn btn-warning"
+            className="btn btn-primary profile-button"
           >
-            Submit Pet
+            Sukurti Augintinį
           </button>
         </form>
       </div>

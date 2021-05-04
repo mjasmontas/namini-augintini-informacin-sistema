@@ -18,48 +18,40 @@ const UserSchema = new mongoose.Schema({
   password: String,
   pets: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Pet"
     }
   ],
   petSitters: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "PetSitter"
     }
   ],
   reservation: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Reservation"
     }
   ],
   veterinarianVisits: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "VeterinarianVisits"
     }
   ],
   trainerVisits: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "trainerVisits"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PetTrainerVisits"
     }
   ],
-  veterinarian: Boolean,
-  petTrainer: Boolean,
-  Admin: Boolean,
-  simpleUser: Boolean
-});
-
-UserSchema.methods.comparePassword = function(inputPass) {
-  return bcrypt.compareSync(inputPass, this.password);
-};
-
-UserSchema.pre("save", function(next) {
-  if (!this.isModified("password")) return next();
-  this.password = bcrypt.hashSync(this.password, 10);
-  return next();
+  roles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role"
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", UserSchema);

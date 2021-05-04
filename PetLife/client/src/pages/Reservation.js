@@ -2,38 +2,62 @@ import React, { Component } from "react";
 // import API from "../utils/API2";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Reservation from "../components/Rezervacija/rezervacija";
+import Reservation from "../components/Reservation/reservation";
 import UserContext from "../context/UserContext";
+import ReservationService from "../Services/reservations.service";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardLink,
+  Container,
+  CardFooter,
+  CardTitle,
+  Row,
+  Table,
+  Button,
+  Col,
+  CardImg
+} from "reactstrap";
+import moment from 'moment'
 
 class ReservationInformation extends Component {
   static contextType = UserContext;
 
   state = {
     reservations: [],
+    reservationCard: [],
     mounted: false,
-    perjungta: false,
+    refreshed: false,
     isLoading: false
   };
   componentDidMount() {
     this.setState({ isLoading: true });
-    axios.get(`/api/user/${this.context.user.id}/reservations`).then(res => {
+    this.state.reservationCard = [];
+    if (!this.context.user) return;
+    ReservationService.getAllUsersReservations(this.context.user.id)
+    .then(res => {
+      console.log(res.data)
       this.setState({
         reservations: res.data.reservation,
         mounted: true,
         isLoading: false
-      });
+      }, this.ReservationData());
     });
   }
 
   componentDidUpdate() {
     if (this.state.mounted === false) {
-      if (this.state.perjungta === false) {
-        axios.get(`/api/user/${this.context.user.id}/reservations`).then(res => {
+      if (this.state.refreshed === false) {
+        this.state.reservationCard = [];
+        ReservationService.getAllUsersReservations(this.context.user.id)
+        .then(res => {
+          console.log(res.data.reservation)
           this.setState({
             reservations: res.data.reservation,
-            perjungta: true,
+            refreshed: true,
             isLoading: false
-          });
+          }, this.ReservationData());
         });
       } else {
         this.setState({
@@ -44,13 +68,29 @@ class ReservationInformation extends Component {
     }
   }
 
+  ReservationData = () =>{
+    var reservation;
+    for( var i = 0; i < this.state.reservations.length; i++){
+      reservation = {
+        startDate: moment(this.state.reservations[i].startDate).format('YYYY-MM-DD'),
+        endDate: moment(this.state.reservations[i].endDate).format('YYYY-MM-DD'),
+        petName: this.state.reservations[i].petName,
+        clientNotes: this.state.reservations[i].clientNotes,
+        veterinarianVisit: this.state.reservations[i].vaterinarianVisit,
+        trainerVisit: this.state.reservations[i].trainerVisit,
+        price: this.state.reservations[i].price
+      }
+      console.log(typeof(moment(this.state.reservations[i].startDate).format('YYYY-MM-DD')));
+    }
+  }
+
   cancelReservation = reservationId => {
-    axios.delete(`/api/user/${reservationId}/reservation`).then(function(res) {
+    ReservationService.deleteReservation(reservationId)
+    .then(function(res) {
       console.log("Reservation canceled");
     });
     let currentComponent = this;
-    axios
-      .get(`/api/user/${this.context.user.id}/reservations`)
+    ReservationService.getAllUsersReservations(this.context.user.id)
       .then(function(res) {
         currentComponent.setState({
           reservations: res.data.reservation
@@ -68,47 +108,41 @@ class ReservationInformation extends Component {
     }
 
     return (
-      <div className="PetSitter">
-        <div className="row">
-          <div className="col-6">
-            <h2>Reservation </h2>
-          </div>
-          <div className="col-6 text-right">
-            <Link
+      <div className="content">
+      <Container fluid>
+        <Container>
+          <h2>Rezervacija</h2>
+        </Container>
+        <Link
               to={`/user/${user.id}/createReservation`}
               className="btn btn-warning btn-lg"
             >
               Create A Reservation!
             </Link>
+        <Row>
+        {this.state.reservations < 1 ? (
+          <div className="alert alert-warning mt-4" role="alert">
+            Jūs neturite padarę jokių rezervacijų
           </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            {this.state.reservations < 1 ? (
-              <div className="alert alert-warning mt-4" role="alert">
-                You have not made any reservations
-              </div>
-            ) : null}
+        ) : null}
+
         {this.state.reservations.map(item => (
           <Reservation
-            key={item._id}
-            id={item._id}
-            pet={item.pet}
-            petName={item.petName}
-            startDate={item.startDate}
-            endDate={item.endDate}
-            clientNotes={item.clientNotes}
-            veterinarianVisit={item.veterinarianVisit}
-            veterinarianNote={item.veterinarianNote}
-            trainerVisit={item.trainerVisit}
-            trainerNote={item.trainerNote}
-            status={item.status}
-            price={item.price}
-            cancelReservation={this.cancelReservation}
+          key={item._id}
+          id={item._id}
+          name={item.petName}
+          startDate={item.startDate}
+          endDate={item.endDate}
+          clientNotes={item.clientNotes}
+          veterinarianVisit={item.veterinarianVisit}
+          trainerVisit={item.trainerVisit}
+          price={item.price}
+          cancelReservation={this.cancelReservation}
           />
         ))}
-          </div>
-        </div>
+          </Row>
+          
+          </Container>
       </div>
     );
   }

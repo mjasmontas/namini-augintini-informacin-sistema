@@ -1,6 +1,4 @@
 import React from "react";
-import axios from "axios";
-//import LoginPage from "./pages/LoginPage";
 import LoginHome from "./components/LoginForm/loginForm"
 import CreateAccountForm from "./components/CreateAccountForm/createAccountForm";
 import UserContext from "./context/UserContext";
@@ -8,7 +6,6 @@ import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Sidebar from "./components/Sidebar/sidebar";
 import Header from "./components/Header/header";
-import Footer from "./components/Footer";
 import PetUpdate from "./components/PetUpdate/petUpdate";
 import UserUpdate from "./components/UserUpdate/userUpdate";
 import Visits from "./pages/Visits";
@@ -17,7 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
 import Home from "./pages/Home";
 import VeterinarianVisit from "./pages/VeterinarianVisit";
-import Auth from "./utils/Auth";
+import TrainerVisit from "./pages/TrainerVisit";
 import PetInfo from "./pages/PetInfo";
 
 import CreatePet from "./pages/CreatePet";
@@ -29,13 +26,15 @@ import PrescriptionPage from "./pages/Prescriptions";
 import DetailsPage from "./pages/DetailsPage";
 import PetFamily from "./pages/PetFamily";
 import ReservationInformation from "./pages/Reservation";
-import ComingSoon from "./pages/ComingSoon";
+import AuthService from "./Services/auth.service";
+import UserService from "./Services/user.service";
 
 // import "./global.scss";
 
 class App extends React.Component {
   state = {
-    user: false
+    user: false,
+    homePage: ''
   };
 
   setUser = user => {
@@ -43,25 +42,60 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    const user = AuthService.getCurrentUser();
+    if (user){
+      this.setUser(user)
+    }
+    
     // if token exists
     // go ask server for user associated with token
-    if (Auth.isLoggedIn()) {
-      axios
-        .get("/api/me", {
-          headers: {
-            Authorization: "Bearer " + Auth.getToken()
-          }
-        })
-        .then(response => {
-          this.setUser(response.data);
-        });
+    // if (Auth.isLoggedIn()) {
+      
+    // console.log("ASAADSSAS")
+    //   axios
+    //     .get("/api/me", {
+    //       headers: {
+    //         Authorization: "Bearer " + Auth.getToken()
+    //       }
+    //     })
+    //     .then(response => {
+    //       this.setUser(response.data);
+    //     });
+    // }
+  }
+
+  userHomePage = user => {
+    if (user.id){
+      UserService.getUser(user.id)
+      .then(res => {
+        if(res.data.roles[0] === '6086c27f1c84567930705b43') {
+          this.setState({
+            homePage: `/user/${user.id}/petfamily`
+          })
+        } else if (res.data.roles[0] === '6086c27f1c84567930705b44') {
+          this.setState({
+            homePage: `/trainer/${user.id}`
+          })
+        } else if (res.data.roles[0] === '6086c27f1c84567930705b45') {
+          this.setState({
+            homePage: `/veterinarian/${user.id}`
+          })
+        } else if (res.data.roles[0] === '6086c27f1c84567930705b46') {
+          this.setState({
+            homePage: `/admin/dashboard`
+          })
+        } 
+      })
     }
   }
 
+
   render() {
     const { user } = this.state;
+    this.userHomePage(user)
     const setUser = this.setUser;
-    const userHome = `/user/${user.id}/petfamily`;
+    // console.log(setUser)
+    // const userHome = `/user/608beceb8807ed3031aa9208/petfamily`;
     return (
       <Router>
         <UserContext.Provider value={{ setUser, user }}>
@@ -73,7 +107,7 @@ class App extends React.Component {
                 <Route
                   exact
                   path="/"
-                  render={() => (user ? <Redirect to={userHome} /> : <Home />)}
+                  render={() => (user ? <Redirect to={this.state.homePage} /> : <Home />)}
                 />
                 <Route exact path="/login" component={LoginHome} />
                 <Route
@@ -115,8 +149,13 @@ class App extends React.Component {
                 />
                 <ProtectedRoutes
                   exact
-                  path="/user/:id/veterinarian"
+                  path="/veterinarian/:id"
                   component={VeterinarianVisit}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/trainer/:id"
+                  component={TrainerVisit}
                 />
                 <ProtectedRoutes
                   exact
@@ -145,7 +184,7 @@ class App extends React.Component {
                 />
                 <ProtectedRoutes
                   exact
-                  path="/user/:id/updatePet"
+                  path="/pet/:id"
                   component={PetUpdate}
                 />
                 <ProtectedRoutes
@@ -153,13 +192,13 @@ class App extends React.Component {
                   path="/user/:id/pets/createPet"
                   component={CreatePet}
                 />
-                <ProtectedRoutes
+                {/* <ProtectedRoutes
                   exact
                   path={`${userHome}/visit/addDetail`}
                   render={props => (
                     <AddDetailPage {...props} pageTitle="document" />
                   )}
-                />
+                /> */}
                 <ProtectedRoutes
                   exact
                   path="/user/:id/prescription"
@@ -191,7 +230,6 @@ class App extends React.Component {
             </div>
           </div>
         </UserContext.Provider>
-        <Footer />
       </Router>
     );
   }

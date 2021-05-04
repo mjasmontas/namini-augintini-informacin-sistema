@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import "./loginForm.css";
-import { withRouter } from "react-router-dom";
-import { BrowserRouter as Link } from "react-router-dom";
+import AuthService from "../../Services/auth.service";
 import UserContext from "../../context/UserContext";
-import Auth from "../../utils/Auth";
 
 class LoginForm extends Component {
   static contextType = UserContext;
@@ -25,14 +23,15 @@ class LoginForm extends Component {
     console.log("Submited");
     const email = this.state.email;
     const password = this.state.password;
-    console.log(this.state.email,);
-    console.log(this.state.password,);
     if (email && password) {
-      Auth.logIn(email, password)
+      AuthService.login(email, password)
         .then(response => {
+          this.props.history.push("/");
+          // window.location.reload();
           console.log(response);
           this.context.setUser(response);
-          this.props.history.push("/");
+          console.log(this.context.user.id)
+          // this.props.history.push("/");
         })
         .catch(err => {
           this.setState({ err: true });

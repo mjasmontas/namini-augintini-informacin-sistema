@@ -1,9 +1,21 @@
 import React, { Component } from "react";
-// import API from "../utils/API2";
-import axios from "axios";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Message from "../components/Messages/messageForm";
 import UserContext from "../context/UserContext";
+import MessageService from "../Services/messages.service";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardLink,
+  Container,
+  CardFooter,
+  CardTitle,
+  Row,
+  Table,
+  Button,
+  Col,
+  CardImg
+} from "reactstrap"
 
 class ReservationInformation extends Component {
   static contextType = UserContext;
@@ -16,7 +28,9 @@ class ReservationInformation extends Component {
   };
   componentDidMount() {
     this.setState({ isLoading: true });
-    axios.get(`/api/messages`).then(res => {
+    MessageService.getAllMessages()
+    .then(res => {
+      console.log(res.data)
       this.setState({
         messages: res.data,
         mounted: true,
@@ -28,7 +42,9 @@ class ReservationInformation extends Component {
   componentDidUpdate() {
     if (this.state.mounted === false) {
       if (this.state.perjungta === false) {
-        axios.get(`/api/messages`).then(res => {
+        MessageService.getAllMessages()
+        .then(res => {
+          console.log(res.data)
           this.setState({
             messages: res.data,
             perjungta: true,
@@ -45,12 +61,12 @@ class ReservationInformation extends Component {
   }
 
   removeMessage = messageId => {
-    axios.delete(`/api/admin/messages/${messageId}`).then(function(res) {
+    MessageService.deleteMessage(messageId)
+    .then(function(res) {
       console.log("Message removed");
     });
     let currentComponent = this;
-    axios
-      .get(`/api/messages`)
+    MessageService.getAllMessages()
       .then(function(res) {
         currentComponent.setState({
           messages: res.data
@@ -59,8 +75,6 @@ class ReservationInformation extends Component {
   };
 
   render() {
-    const { user } = this.context;
-
     const { isLoading } = this.state;
  
     if (isLoading) {
@@ -68,19 +82,18 @@ class ReservationInformation extends Component {
     }
 
     return (
-      <div className="PetSitter">
-        <div className="row">
-          <div className="col-6">
-            <h2>Customer's Messages </h2>
+      <div className="content">
+      <Container fluid>
+        <Container>
+          <h2>Klietų Pranešimai </h2>
+        </Container>
+        <Row>
+        {this.state.messages < 1 ? (
+          <div className="alert alert-warning mt-4" role="alert">
+            Pranešimų nėra
           </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            {this.state.messages < 1 ? (
-              <div className="alert alert-warning mt-4" role="alert">
-                There are no messages
-              </div>
-            ) : null}
+        ) : null}
+
         {this.state.messages.map(item => (
           <Message
             key={item._id}
@@ -92,9 +105,37 @@ class ReservationInformation extends Component {
             removeMessage={this.removeMessage}
           />
         ))}
-          </div>
-        </div>
+          </Row>
+          
+          </Container>
       </div>
+      // <div className="PetSitter">
+      //   <div className="row">
+      //     <div className="col-6">
+      //       <h2>Klietų Pranešimai </h2>
+      //     </div>
+      //   </div>
+      //   <div className="row">
+      //     <div className="col-12">
+      //       {this.state.messages < 1 ? (
+      //         <div className="alert alert-warning mt-4" role="alert">
+      //           There are no messages
+      //         </div>
+      //       ) : null}
+      //   {this.state.messages.map(item => (
+      //     <Message
+      //       key={item._id}
+      //       id={item._id}
+      //       name={item.name}
+      //       email={item.email}
+      //       subject={item.subject}
+      //       message={item.message}
+      //       removeMessage={this.removeMessage}
+      //     />
+      //   ))}
+      //     </div>
+      //   </div>
+      // </div>
     );
   }
 }

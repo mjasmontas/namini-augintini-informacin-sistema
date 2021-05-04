@@ -1,8 +1,6 @@
 import Axios from "axios";
 import React, { Component } from "react";
-// import Header from "../components/Header/header";
-// import Footer from "../components/Footer/index";
-// import Sidebar from "../components/Sidebar/sidebar";
+import MessageService from "../../Services/messages.service";
 
 import "./style.css";
 
@@ -29,9 +27,8 @@ class HomeBox extends Component {
       subject: this.state.subject,
       message: this.state.message
     }
-    Axios.post(`/api/message`, newMessage)
+    MessageService.addNewMessage(this.state.name, this.state.email, this.state.subject, this.state.message)
     .then(function() {
-      console.log("message sent")
       window.location = `/`;
     });
   };
