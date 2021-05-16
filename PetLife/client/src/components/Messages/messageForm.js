@@ -2,17 +2,10 @@ import React from "react";
 import "./messageForm.css";
 import {
   Card,
-  CardHeader,
   CardBody,
   CardLink,
-  Container,
-  CardFooter,
   CardTitle,
-  Row,
-  Table,
-  Button,
-  Col,
-  CardImg
+  Col
 } from "reactstrap"
 import CardSubtitle from "reactstrap/lib/CardSubtitle";
 import CardText from "reactstrap/lib/CardText";

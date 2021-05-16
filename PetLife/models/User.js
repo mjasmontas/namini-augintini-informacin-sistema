@@ -15,6 +15,24 @@ const UserSchema = new mongoose.Schema({
     type: String, 
     maxlength: 24 
   },
+  years:{
+    type: String
+  },
+  hireDate:{
+    type:String
+  },
+  fireDate: {
+    type: String
+  },
+  address: {
+    type: String
+  },
+  city: {
+    type: String
+  },
+  zipCode: {
+    type: String
+  },
   password: String,
   pets: [
     {

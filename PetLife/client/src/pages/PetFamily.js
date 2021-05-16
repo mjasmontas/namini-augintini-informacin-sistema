@@ -50,10 +50,11 @@ class PetFamily extends React.Component {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
 
     return (
+      <div className="container">
       <div className="row">
         {this.state.pets.map(item => {
           return <Pet key={item._id} img={item.image} name={item.name} />;
@@ -76,6 +77,7 @@ class PetFamily extends React.Component {
             </Link>
           </button>
         </div>
+      </div>
       </div>
     );
   }

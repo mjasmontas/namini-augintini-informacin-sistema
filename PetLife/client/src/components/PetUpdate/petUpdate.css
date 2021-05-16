@@ -46,3 +46,7 @@
 .optionSize{
     width: 100% !important;
 }
+
+.buttons{
+    margin-bottom: 10px;
+}

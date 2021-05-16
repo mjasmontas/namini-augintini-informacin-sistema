@@ -14,43 +14,60 @@ class Header extends Component {
   render() {
     return (
       <UserContext.Consumer>
-        {context => {
+        {(context) => {
           return (
             <header className="Header">
               <div class="container d-flex align-items-center justify-content-between">
+                <h1 class="logo">
+                  <a>Augintiniai</a>
+                </h1>
 
-<h1 class="logo"><a>Tempo</a></h1>
-
-<nav id="navbar" class="navbar">
-{context.user ? (
-  <>
-    <ul>
-    <span>
-      Email:<strong> {context.user.email}</strong>
-      </span>
-      <button
-        onClick={this.handleLogOut}
-        className="btn btn-link"
-        >
-          Log Out
-        </button>
-        </ul>
-        </>
-        ) : (
-          <>
-            <ul>
-              <li><a class="nav-link scrollto active" href="/">Home</a></li>
-              <li><a class="nav-link scrollto" href="/#about">About</a></li>
-              <li><a class="nav-link scrollto" href="/#services">Services</a></li>
-              <li><a class="nav-link scrollto" href="/#contact">Contact</a></li>
-              <li><a class="nav-link scrollto " href="/login">Sign In</a></li>
-            </ul>
-            <i class="bi bi-list mobile-nav-toggle"></i>
-          </>
-          )}
-</nav>
-
-</div>
+                <nav id="navbar" class="navbar">
+                  {context.user ? (
+                    <>
+                      <ul>
+                        <button
+                          onClick={this.handleLogOut}
+                          className="btn btn-link"
+                        >
+                          Atsijungti
+                        </button>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <ul>
+                        <li>
+                          <a class="nav-link scrollto active" href="/">
+                            Pagrindinis
+                          </a>
+                        </li>
+                        <li>
+                          <a class="nav-link scrollto" href="/#about">
+                            Apie mus
+                          </a>
+                        </li>
+                        <li>
+                          <a class="nav-link scrollto" href="/#services">
+                            Paslaugos
+                          </a>
+                        </li>
+                        <li>
+                          <a class="nav-link scrollto" href="/#contact">
+                            Kontaktai
+                          </a>
+                        </li>
+                        <li>
+                          <a class="nav-link scrollto " href="/login">
+                            Prisijungti
+                          </a>
+                        </li>
+                      </ul>
+                      <i class="bi bi-list mobile-nav-toggle"></i>
+                    </>
+                  )}
+                </nav>
+              </div>
             </header>
           );
         }}

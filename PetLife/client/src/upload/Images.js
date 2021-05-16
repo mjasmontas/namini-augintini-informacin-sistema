@@ -6,7 +6,7 @@ export default props =>
       <button
         onClick={() => props.removeImage(image.public_id)} 
         className="delete">
-       Delete Image
+       Ištrinti
       </button>
       <img 
         src={image.secure_url} 

@@ -1,23 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
-import axios from "axios";
-import UserInfoCard from "../components/Users/userInfoCard";
 import UserService from "../Services/user.service";
 import {
   Card,
   CardHeader,
   CardBody,
   Container,
-  CardFooter,
-  CardTitle,
   Row,
   Table,
   Button,
   Col,
-} from "reactstrap";
+} from "reactstrap";import {
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const allUsers = (user, index) => {
+  console.log(user)
   return (
     <tr key={index}>
       <td>{index}</td>
@@ -25,7 +25,7 @@ const allUsers = (user, index) => {
       <td>{user.email}</td>
       <td>{user.reservation.length}</td>
       <td>{user.pets.length}</td>
-      <Button className="edit-delete-buttons" variant="tertiary" size="xs">Edit</Button>
+      <td><Button onClick={event => window.location.href='/admin/users/' + user._id}><FontAwesomeIcon icon={faEdit} className="mr-1" /></Button></td>
     </tr>
   )
 }
@@ -74,6 +74,8 @@ class Users extends React.Component {
     }
   }
 
+  
+
   render() {
     const { user } = this.context;
 
@@ -81,7 +83,7 @@ class Users extends React.Component {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
     return (
       <Container>

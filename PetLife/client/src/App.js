@@ -8,7 +8,6 @@ import Sidebar from "./components/Sidebar/sidebar";
 import Header from "./components/Header/header";
 import PetUpdate from "./components/PetUpdate/petUpdate";
 import UserUpdate from "./components/UserUpdate/userUpdate";
-import Visits from "./pages/Visits";
 import Messages from "./pages/Messages";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
@@ -18,18 +17,14 @@ import TrainerVisit from "./pages/TrainerVisit";
 import PetInfo from "./pages/PetInfo";
 
 import CreatePet from "./pages/CreatePet";
-import AddDetailPage from "./pages/AddDetailPage";
-import PetSitter from "./pages/PetSitter";
-import CreatePetSitter from "./pages/CreatePetSitter";
+import Profile from "./pages/Profile";
 import CreateReservation from "./pages/CreateReservation";
-import PrescriptionPage from "./pages/Prescriptions";
-import DetailsPage from "./pages/DetailsPage";
 import PetFamily from "./pages/PetFamily";
 import ReservationInformation from "./pages/Reservation";
 import AuthService from "./Services/auth.service";
 import UserService from "./Services/user.service";
 
-// import "./global.scss";
+import "./global.css";
 
 class App extends React.Component {
   state = {
@@ -94,8 +89,6 @@ class App extends React.Component {
     const { user } = this.state;
     this.userHomePage(user)
     const setUser = this.setUser;
-    // console.log(setUser)
-    // const userHome = `/user/608beceb8807ed3031aa9208/petfamily`;
     return (
       <Router>
         <UserContext.Provider value={{ setUser, user }}>
@@ -117,28 +110,6 @@ class App extends React.Component {
                 />
                 <ProtectedRoutes
                   exact
-                  path="/user/:id/visits"
-                  component={Visits}
-                />
-
-                <ProtectedRoutes
-                  exact
-                  path="/user/:id/pets/:petId/visits/addDetail"
-                  render={props => (
-                    <AddDetailPage
-                      {...props}
-                      pageTitle="Visits"
-                      postTo="/api/visits"
-                    />
-                  )}
-                />
-                <ProtectedRoutes
-                  exact
-                  path="/user/:id/visits/viewDetail"
-                  component={DetailsPage}
-                />
-                <ProtectedRoutes
-                  exact
                   path="/user/:id/petfamily"
                   component={PetFamily}
                 />
@@ -156,6 +127,11 @@ class App extends React.Component {
                   exact
                   path="/trainer/:id"
                   component={TrainerVisit}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/user/profile/:id"
+                  component={Profile}
                 />
                 <ProtectedRoutes
                   exact
@@ -191,35 +167,6 @@ class App extends React.Component {
                   exact
                   path="/user/:id/pets/createPet"
                   component={CreatePet}
-                />
-                {/* <ProtectedRoutes
-                  exact
-                  path={`${userHome}/visit/addDetail`}
-                  render={props => (
-                    <AddDetailPage {...props} pageTitle="document" />
-                  )}
-                /> */}
-                <ProtectedRoutes
-                  exact
-                  path="/user/:id/prescription"
-                  component={PrescriptionPage}
-                />
-                <ProtectedRoutes
-                  exact
-                  path={`/user/${user.id}/prescription/addDetail/:petId`}
-                  render={props => (
-                    <AddDetailPage {...props} pageTitle="prescription" />
-                  )}
-                />
-                <ProtectedRoutes
-                  exact
-                  path="/user/:id/petSitters"
-                  component={PetSitter}
-                />
-                <ProtectedRoutes
-                  exact
-                  path="/user/:id/petSitters/createPetSitter"
-                  component={CreatePetSitter}
                 />
                 <ProtectedRoutes
                   exact

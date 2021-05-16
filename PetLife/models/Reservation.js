@@ -16,18 +16,15 @@ const reservationSchema = new mongoose.Schema({
   pet: {
     type: Schema.Types.ObjectId,
     ref: 'pet',
-    // required: true,
   },
   petName: {
     type: String
   },
   startDate: {
-    type: Date,
-    // required: true,
+    type: Date
   },
   endDate: {
-    type: Date,
-    // required: true,
+    type: Date
   },
   clientNotes: {
     type: String,
@@ -35,27 +32,8 @@ const reservationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    // required: true,
-    enum: [
-      "uzsakytas",
-      "progrese",
-      "atsauktas",
-      "pabaigtas"
-    ],
   },
-  veterinarianVisit: {
-    type: Boolean
-  },
-  veterinarianNote: {
-    type: String
-  },
-  trainerVisit: {
-    type: Boolean
-  },
-  trainerNote: {
-    type: String
-  },
-  price: {
+    price: {
     type: Number,
   }
 });

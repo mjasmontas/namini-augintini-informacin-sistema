@@ -1,5 +1,4 @@
 import React from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FileUpload from "../upload/fileUpload";
 import UserContext from "../context/UserContext";
@@ -12,7 +11,7 @@ class CreatePet extends React.Component {
     petName: "",
     image: "",
     type: "",
-    birthday: new Date(),
+    years: "",
     allergies: "",
     temperament: "",
     size: "",
@@ -37,23 +36,16 @@ class CreatePet extends React.Component {
     let petFamUrl = `/user/${this.context.user.id}/petFamily`;
     console.log(this.state.type)
     PetService
-      .addNewPet(this.context.user.id, this.state.image, this.state.petName, this.state.type, this.state.birthday, this.state.allergies, this.state.temperament, this.state.size)
+      .addNewPet(this.context.user.id, this.state.image, this.state.petName, this.state.type, this.state.years, this.state.allergies, this.state.temperament, this.state.size)
       .then(function() {
         window.location = petFamUrl;
       });
   };
 
   handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-    console.log(this.state.type);
+    this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleDateChange = date => {
-    this.setState({
-      birthday: date
-    });
-  };
 
   handleTypeOptionChange = e => {
     console.log(e.target.value);
@@ -71,79 +63,135 @@ class CreatePet extends React.Component {
 
   render() {
     return (
-      <div>
-        <h2 className="mb-4">Naujas Augintinis</h2>
-        <form>
-          <div className="form-group">
-            <label>Augintinio Vardas</label>
-            <input
-              name="petName"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.petName}
-            />
+      <div className="container">
+        <div class="row gutters">
+          <h4 class="text-right">Atnaujinti augintinį</h4>
+        </div>
+        <div className="row gutters">
+          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div className="card h-100">
+              <div className="card-body">
+                <div className="row gutters">
+                  <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h4 className="mb-2 text-primary">
+                      Augintinio informacija
+                    </h4>
+                  </div>
+                  <div class="form-group">
+                    <label>Augintinio tipas</label>
+                    <div class="col-sm-10">
+                      <select
+                        class="form-control"
+                        value={this.state.type}
+                        onChange={this.handleTypeOptionChange}
+                      >
+                        <option>-- Pasirinkite augintinio tipą --</option>
+                          <option>Šuo</option>
+                          <option>Katė</option>
+                          <option>Paukštis</option>                       
+                          <option>Žiurkėnas</option>
+                          <option>Žuvis</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                    <div className="form-group">
+                      <label>Augintinio vardas</label>
+                      <input
+                        type="text"
+                        name="petName"
+                        className="form-control"
+                        placeholder="Įveskite augintinio vardą"
+                        onChange={this.handleInputChange}
+                        value={this.state.petName}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                    <div className="form-group">
+                      <label>Augintinio nuotauka</label>
+                      <FileUpload onComplete={this.setFile} />
+                    </div>
+                  </div>
+                  
+                  <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                    <div className="form-group">
+                      <label>Augintinio amžius</label>
+                      <input
+                        type="text"
+                        name="years"
+                        className="form-control"
+                        id="years"
+                        placeholder="Įveskite augintinio amžių"
+                        onChange={this.handleInputChange}
+                        value={this.state.years}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                    <div className="form-group">
+                      <label for="allergies">Alergijos</label>
+                      <textarea
+                        type="text"
+                        name="allergies"
+                        className="form-control"
+                        id="allergies"
+                        rows="2"
+                        placeholder="Įveskite augintinio alergijas"
+                        onChange={this.handleInputChange}
+                        value={this.state.allergies}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                    <div className="form-group">
+                      <label for="temperament">Temperamentas</label>
+                      <textarea
+                        type="text"
+                        name="temperament"
+                        className="form-control"
+                        id="temperament"
+                        rows="2"
+                        placeholder="Apibūdinkite augintinio temperamentą"
+                        onChange={this.handleInputChange}
+                        value={this.state.temperament}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <label>Augintinio dydis</label>
+                <div class="col-sm-10">
+                  <select
+                    class="form-control"
+                    value={this.state.size}
+                    onChange={this.handleSizeOptionChange}
+                  >
+                    <option>-- Pasirinkite augintinio dydį --</option>
+                      <option>Mažas</option>
+                      <option>Vidutinis</option>
+                      <option>Didelis</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row gutters buttons">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                  <div class="text-right">
+                    <button
+                      type="button"
+                      onClick={this.submitData}
+                      id="submit"
+                      name="submit"
+                      class="btn btn-primary"
+                    >
+                      Sukurti
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Nuotrauka</label>
-            <FileUpload onComplete={this.setFile} />
-          </div>
-          <div class="col-md-12">
-            <label>Augintinio Tipas</label>
-            <select className="optionSize" onChange={this.handleTypeOptionChange}>
-            <option value="Select a pet"> -- Pasirinkite Tipą -- </option>
-            <option value="Šuo">Šuo</option>
-            <option value="Katė">Katė</option>
-            <option value="Paukštis">Paukštis</option>
-            <option value="Žiurkėnas">Žiurkėnas</option>
-            </select> 
-          </div>
-          <div className="form-group">
-            <label>Gimimo Data</label>
-            <DatePicker
-              name="bday"
-              className="form-control"
-              onSelect={this.handleDateChange}
-              selected={this.state.birthday}
-            />
-          </div>
-          <div className="form-group">
-            <label>Alergijos</label>
-            <input
-              name="allergies"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.allergies}
-            />
-          </div>
-          <div className="form-group">
-            <label>Temperamentas</label>
-            <input
-              name="temperament"
-              type="text"
-              className="form-control"
-              onChange={this.handleInputChange}
-              value={this.state.temperament}
-            />
-          </div>
-          <div class="col-md-12">
-            <label>Augintinio dydis</label>
-            <select className="optionSize" onChange={this.handleSizeOptionChange}>
-            <option value="Select a pet"> -- Pasirinkite Dydi -- </option>
-            <option value="Mažas">Mažas</option>
-            <option value="Vidutinis">Vidutinis</option>
-            <option value="Didelis">Didelis</option>
-            </select> 
-          </div>
-          <button
-            onClick={this.submitData}
-            type="submit"
-            className="btn btn-primary profile-button"
-          >
-            Sukurti Augintinį
-          </button>
-        </form>
+        </div>
       </div>
     );
   }

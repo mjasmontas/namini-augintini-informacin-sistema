@@ -3,18 +3,8 @@ import Message from "../components/Messages/messageForm";
 import UserContext from "../context/UserContext";
 import MessageService from "../Services/messages.service";
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardLink,
   Container,
-  CardFooter,
-  CardTitle,
-  Row,
-  Table,
-  Button,
-  Col,
-  CardImg
+  Row
 } from "reactstrap"
 
 class ReservationInformation extends Component {
@@ -78,7 +68,7 @@ class ReservationInformation extends Component {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
 
     return (

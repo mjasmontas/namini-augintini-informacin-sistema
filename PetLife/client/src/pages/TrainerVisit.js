@@ -1,21 +1,10 @@
 import React, { Component } from "react";
 import UserContext from "../context/UserContext";
 import Visit from "../components/petTrainer/TrainerVisit";
-import moment from 'moment'
 import TrainerService from "../Services/petTrainer.service";
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardLink,
   Container,
-  CardFooter,
-  CardTitle,
-  Row,
-  Table,
-  Button,
-  Col,
-  CardImg
+  Row
 } from "reactstrap"
 
 class Visits extends Component {
@@ -39,33 +28,6 @@ class Visits extends Component {
       });
     })
   }
-
-  // fixTime (){
-  //   var startTime;
-  //   var endTime;
-  //   var s;
-  //   var e;
-  //   var start = "startTime";
-  //   var end = "endTime";
-  //   for (var i = 0; i < this.state.visits.length; i++){
-  //     var test = this.state.visits[i];
-  //     if (i === 0){
-  //       startTime = moment('9:00', 'H:m')
-  //       endTime = moment('10:00', 'H:m')
-  //     } else if (i == 3){
-  //       startTime = moment('13:00', 'H:m')
-  //       endTime = moment('14:00', 'H:m')
-  //     } else {
-  //       s = startTime.add(1,'hours')
-  //       endTime = endTime.add(1,'hours')
-  //       console.log('a')
-  //     }
-  //     s = startTime.format('H:m')
-  //     e = endTime.format('H:m')
-  //   this.state.visits[i].startTime = '455551'
-  //   }
-
-  // }
 
   componentDidUpdate() {
     if (this.state.mounted === false) {
@@ -105,7 +67,7 @@ class Visits extends Component {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
     return (
       <div className="content">

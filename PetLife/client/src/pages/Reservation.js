@@ -1,25 +1,12 @@
 import React, { Component } from "react";
-// import API from "../utils/API2";
-import axios from "axios";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Reservation from "../components/Reservation/reservation";
 import UserContext from "../context/UserContext";
 import ReservationService from "../Services/reservations.service";
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardLink,
   Container,
-  CardFooter,
-  CardTitle,
   Row,
-  Table,
-  Button,
-  Col,
-  CardImg
 } from "reactstrap";
-import moment from 'moment'
 
 class ReservationInformation extends Component {
   static contextType = UserContext;
@@ -57,7 +44,7 @@ class ReservationInformation extends Component {
             reservations: res.data.reservation,
             refreshed: true,
             isLoading: false
-          }, this.ReservationData());
+          });
         });
       } else {
         this.setState({
@@ -65,22 +52,6 @@ class ReservationInformation extends Component {
         });
         
       }
-    }
-  }
-
-  ReservationData = () =>{
-    var reservation;
-    for( var i = 0; i < this.state.reservations.length; i++){
-      reservation = {
-        startDate: moment(this.state.reservations[i].startDate).format('YYYY-MM-DD'),
-        endDate: moment(this.state.reservations[i].endDate).format('YYYY-MM-DD'),
-        petName: this.state.reservations[i].petName,
-        clientNotes: this.state.reservations[i].clientNotes,
-        veterinarianVisit: this.state.reservations[i].vaterinarianVisit,
-        trainerVisit: this.state.reservations[i].trainerVisit,
-        price: this.state.reservations[i].price
-      }
-      console.log(typeof(moment(this.state.reservations[i].startDate).format('YYYY-MM-DD')));
     }
   }
 
@@ -104,7 +75,7 @@ class ReservationInformation extends Component {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
 
     return (

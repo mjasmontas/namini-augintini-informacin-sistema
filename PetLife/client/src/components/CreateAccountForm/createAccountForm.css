@@ -101,7 +101,7 @@
   color: #777;
 }
 
-.container button {
+.container .buttonRegistration {
     background: #e43c5c;
     border: 0;
     padding: 10px 28px;
@@ -110,7 +110,7 @@
     border-radius: 50px;
   }
   
-.container button[type="submit"]:hover {
+.container .buttonRegistration[type="submit"]:hover {
     background: #d01d3f;
   }
 

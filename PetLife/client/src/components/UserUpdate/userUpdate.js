@@ -3,7 +3,6 @@ import "./userUpdate.css";
 import UserContext from "../../context/UserContext";
 import UserService from "../../Services/user.service";
 
-
 class UserUpdateForm extends Component {
   static contextType = UserContext;
 
@@ -11,222 +10,279 @@ class UserUpdateForm extends Component {
     firstName: "",
     lastName: "",
     email: "",
-    veterinarian: false,
-    petTrainer: "",
-    simpleUser: "",
+    phoneNumber: "",
+    isVeterinarian: false,
+    isPetTrainer: false,
+    isUser: false,
     role: "",
-    loading: ''
+    loading: "",
   };
 
-  
   componentDidMount() {
-    UserService.getUser(this.props.match.params.id).then(res => {
-        if (res.data.roles[0] === '6086c27f1c84567930705b43'){
+    UserService.getUser(this.props.match.params.id).then((res) => {
+      if (res.data.roles) {
+        if (res.data.roles[0] === "6086c27f1c84567930705b43") {
           this.setState({
-            simpleUser: true,
-            veterinarian: false,
-            petTrainer: false
-          })
-          // this.state.simpleUser = true;
-          // this.state.veterinarian = false;
-          // this.state.petTrainer = false;
-        } else if (res.data.roles[0] === '6086c27f1c84567930705b44'){
+            isUser: true,
+          });
+          console.log('v')
+        } else if (res.data.roles[0] === "6086c27f1c84567930705b44") {
           this.setState({
-            simpleUser: false,
-            veterinarian: false,
-            petTrainer: true
-          })
-          // this.state.simpleUser = false;
-          // this.state.veterinarian = false;
-          // this.state.petTrainer = true;
-        } else if (res.data.roles[0] === '6086c27f1c84567930705b45'){
+            isPetTrainer: true,
+          });
+          console.log('b')
+        } else if (res.data.roles[0] === "6086c27f1c84567930705b45") {
           this.setState({
-            simpleUser: false,
-            veterinarian: true,
-            petTrainer: false
-          })
-          // this.state.simpleUser = false;
-          // this.state.veterinarian = true;
-          // this.state.petTrainer = false;
+            isVeterinarian: true,
+          });
+          console.log('a')
         }
-
+        console.log(res.data);
         this.setState({
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            email: res.data.email,
-            role: res.data.roles[0],
-            mounted: true,
-            isLoading: false
-          }, this.fillData());
-    });   
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          email: res.data.email,
+          phoneNumber: res.data.phoneNumber,
+          role: res.data.roles[0],
+          mounted: true,
+          isLoading: false,
+        });
+      }
+    });
   }
 
   componentDidUpdate() {
     if (this.state.mounted === false) {
       if (this.state.refreshed === false) {
-        UserService.getUser(this.props.match.params.id).then(res => {
-          console.log(res.data);
+        UserService.getUser(this.props.match.params.id).then((res) => {
           this.setState({
             refreshed: true,
-            isLoading: false
-          }, this.fillData());
+            isLoading: false,
+          });
+          if (res.data.roles[0] === "6086c27f1c84567930705b43") {
+            this.setState({
+              isUser: true,
+            });
+          } else if (res.data.roles[0] === "6086c27f1c84567930705b44") {
+            this.setState({
+              isPetTrainer: true,
+            });
+          } else if (res.data.roles[0] === "6086c27f1c84567930705b45") {
+            this.setState({
+              isVeterinarian: true,
+            });
+          }
         });
       } else {
         this.setState({
-          mounted: true
+          mounted: true,
         });
       }
     }
   }
 
-  fillData(){
-    if (this.state.role === '6086c27f1c84567930705b43'){
-      this.setState({
-        simpleUser: false,
-        veterinarian: false,
-        petTrainer: true
-      })
-    } else if (this.state.role === '6086c27f1c84567930705b44'){
-      this.setState({
-        simpleUser: false,
-        veterinarian: false,
-        petTrainer: true
-      })
-    } else if (this.state.role === '6086c27f1c84567930705b45'){
-      this.setState({
-        simpleUser: false,
-        veterinarian: true,
-        petTrainer: false
-      })
-    }
-  }
-
-  handleVetChange = e => {
-      this.setState({
-          veterinarian: e.target.checked,
-          petTrainer: false,
-          simpleUser: false
-      })
-  }
   
-  handleTrainerChange = e => {
-    this.setState({
-        petTrainer: e.target.checked,
-        veterinarian: false,
-        simpleUser: false
-    })
-  }
 
-  handleSimpleChange = e => {
-    this.setState({
-        simpleUser: e.target.checked,
-        petTrainer: false,
-        veterinarian: false
-    })
-  }
-
-  submitData = e => {
+  submitData = (e) => {
     e.preventDefault();
     let roles;
-    console.log(this.state.veterinarian || this.state.petTrainer || this.state.simpleUser)
+    console.log(
+      this.state.isVeterinarian || this.state.petTrainer || this.state.isUser
+    );
     const user = {
-      veterinarian: this.state.veterinarian,
-      petTrainer: this.state.petTrainer,
-      simpleUser: this.state.simpleUser
+      veterinarian: this.state.isVeterinarian,
+      petTrainer: this.state.isPetTrainer,
+      simpleUser: this.state.isUser,
     };
-    if (this.state.veterinarian){
-      roles = ['6086c27f1c84567930705b45']
-    } else if (this.state.petTrainer){
-      roles = ['6086c27f1c84567930705b44']
-    } else if (this.state.simpleUser){
-      roles = ['6086c27f1c84567930705b43']
+    if (this.state.isVeterinarian) {
+      roles = ["6086c27f1c84567930705b45"];
+    } else if (this.state.isPetTrainer) {
+      roles = ["6086c27f1c84567930705b44"];
+    } else if (this.state.isUser) {
+      roles = ["6086c27f1c84567930705b43"];
     }
 
-    if (this.state.veterinarian || this.state.petTrainer || this.state.simpleUser){
-       
+    if (
+      this.state.isVeterinarian ||
+      this.state.isPetTrainer ||
+      this.state.isUser
+    ) {
       let userUrl = `/admin/users`;
-      console.log(roles)
-      UserService.updateUser(this.props.match.params.id, roles)
-      .then(function() {
-        window.location = userUrl;
-      });
-    } 
+      console.log(roles);
+      UserService.updateUser(this.props.match.params.id, roles).then(
+        function () {
+          window.location = userUrl;
+        }
+      );
+    }
   };
 
-  deleteUser = e => {
+  deleteUser = (e) => {
     let userUrl = `/admin/users`;
-    UserService.deleteUser(this.props.match.params.id)
-      .then(function() {
-        window.location = userUrl;
-      });
-  }
+    UserService.deleteUser(this.props.match.params.id).then(function () {
+      window.location = userUrl;
+    });
+  };
+
+  handleVetChange = (e) => {
+    this.setState({
+      isVeterinarian: e.target.checked,
+      isPetTrainer: false,
+      isUser: false,
+    });
+  };
+
+  handleTrainerChange = (e) => {
+    this.setState({
+      isPetTrainer: e.target.checked,
+      isVeterinarian: false,
+      isUser: false,
+    });
+  };
+
+  handleSimpleUserChange = (e) => {
+    this.setState({
+      isUser: e.target.checked,
+      isPetTrainer: false,
+      isVeterinarian: false,
+    });
+  };
 
   render() {
-
-    const {errors} = this.state;
+    const { errors } = this.state;
 
     const { isLoading } = this.state;
- 
+
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
 
     return (
-        <div>
-        <h2 className="mb-4">User Information</h2>
-        <form>
-          <div className="form-group">
-            <label>First Name</label>
-            <p>{this.state.firstName}</p>
+      <div className="container">
+        <div class="row gutters">
+          <h4 class="text-right">Rolės pakeitimas/ vartotojo ištrinimas</h4>
+        </div>
+        <div className="row gutters">
+          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div className="card h-100">
+              <div className="card-body">
+                <div className="row gutters">
+                  <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h4 className="mb-2 text-primary">Vartotojo informacija</h4>
+                  </div>
+                  <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div className="form-group">
+                      <label>Vartotojo vardas</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="firstName"
+                        readonly="readonly"
+                        defaultValue={this.state.firstName}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div className="form-group">
+                      <label>Vartotojo pavardė</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        readonly="readonly"
+                        defaultValue={this.state.lastName}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div className="form-group">
+                      <label>Vartotojo elektroninis paštas</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="email"
+                        readonly="readonly"
+                        defaultValue={this.state.email}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div className="form-group">
+                      <label>Vartotojo telefono numeris</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        readonly="readonly"
+                        defaultValue={this.state.phoneNumber}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr />
+
+              <div className="spacing">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    onChange={this.handleSimpleUserChange}
+                    checked={this.state.isUser}
+                  />
+                  <label class="form-check-label" for="inlineRadio1">
+                    Klientas
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    onChange={this.handleVetChange}
+                    checked={this.state.isVeterinarian}
+                  />
+                  <label class="form-check-label" for="isPetTrainer">
+                    Veterinaras
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    onClick={this.handleTrainerChange}
+                    checked={this.state.isPetTrainer}
+                  />
+                  <label class="form-check-label" for="isPetTrainer">
+                    Augintinio treneris
+                  </label>
+                </div>
+              </div>
+              <div class="row gutters buttons">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                  <div class="text-right">
+                    <button
+                      type="button"
+                      onClick={this.submitData}
+                      id="submit"
+                      name="submit"
+                      class="btn btn-primary"
+                    >
+                      Atnaujinti
+                    </button>
+                  </div><div class="text-right">
+                    <button
+                      type="button"
+                      onClick={this.deleteUser}
+                      id="submit"
+                      name="submit"
+                      class="btn btn-primary"
+                    >
+                      Ištrinti
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Last Name</label>
-            <p>{this.state.lastName}</p>
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <p>{this.state.email}</p>
-          </div>
-          <div className="form-group">
-            <label>Is Veterinarian</label>
-            <input
-              name="veterinarianVisit"
-              type="checkbox"
-              onChange={this.handleVetChange}
-              checked={this.state.veterinarian}
-            />
-          </div>
-          <div className="form-group">
-            <label>Is Pet Trainer</label>
-            <input
-              name="petTrainer"
-              type="checkbox"
-              onChange={this.handleTrainerChange}
-              checked={this.state.petTrainer}
-            />
-          </div>
-          <div className="form-group">
-            <label>Is Simple User</label>
-            <input
-              name="simplerUser"
-              type="checkbox"
-              onChange={this.handleSimpleChange}
-              checked={this.state.simpleUser}
-            />
-          </div>
-          <div>
-          <input 
-                type="submit" 
-                value="Update"
-                onClick={this.submitData}  />
-          </div>
-          <div>
-          <input 
-                type="submit" 
-                value="Delete"
-                onClick={this.deleteUser}  />
-          </div>
-        </form>
+        </div>
       </div>
     );
   }

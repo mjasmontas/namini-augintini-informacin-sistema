@@ -10,13 +10,13 @@ class PetService {
     return axios.get('/api/pet/' + id, { headers: authHeader()  });
   }
 
-  addNewPet(id, image, name, type, birthday, allergies, tamparament, size) {
+  addNewPet(id, image, name, type, years, allergies, tamparament, size) {
     console.log(type)
     return axios.post('/api/user/' + id + '/createPet', { 
         image,
         name,
         type,
-        birthday,
+        years,
         allergies,
         tamparament,
         size,

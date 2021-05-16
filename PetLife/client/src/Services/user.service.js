@@ -14,6 +14,19 @@ class UserService {
     return axios.put('/api/admin/user/' + id, { roles: roles })
   }
 
+  updateProfileUser(id, firstName, lastName, email, phoneNumber, dateOfBirth, address, city, zipCode){
+    return axios.put('/api/user/profile/' + id, { 
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phoneNumber: phoneNumber,
+      dateOfBirth: dateOfBirth,
+      address: address,
+      city: city,
+      zipCode: zipCode    
+    })
+  }
+
   deleteUser(id){
     return axios.delete('/api/admin/user/' + id, { headers: authHeader()  })
   }

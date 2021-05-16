@@ -27,11 +27,9 @@ class LoginForm extends Component {
       AuthService.login(email, password)
         .then(response => {
           this.props.history.push("/");
-          // window.location.reload();
           console.log(response);
           this.context.setUser(response);
           console.log(this.context.user.id)
-          // this.props.history.push("/");
         })
         .catch(err => {
           this.setState({ err: true });
@@ -48,7 +46,7 @@ class LoginForm extends Component {
     <div class="container test">
       {this.state.err ? (
           <div class="alert alert-danger" role="alert">
-            Email or password is incorrect
+            El. paštas arba slaptažodis yra neteisingi
           </div>
         ) : null}
         {
@@ -58,35 +56,35 @@ class LoginForm extends Component {
           <div class="card-img-left d-none d-md-flex">
           </div>
           <div class="card-body">
-            <h5 class="card-title text-center">Log In</h5>
+            <h5 class="card-title text-center">Prisijungti</h5>
             <form class="form-signin">
             <div class="form-label-group">
               <input 
                 type="text" 
-                placeholder="Email" 
+                placeholder="Elektroninis paštas" 
                 required="" 
                 class="form-control" 
                 id="email" 
                 name="email"
                 value={this.state.email}
                 onChange={this.handleInputChange} />
-                <label for="email">Email</label>
+                <label for="email">Elektroninis paštas</label>
               </div>
 
               <div class="form-label-group">
               <input 
                 type="password" 
-                placeholder="Password" 
+                placeholder="Slaptažodis" 
                 required="" 
                 class="form-control" 
                 id="password" 
                 name="password"
                 value={this.state.password}
                 onChange={this.handleInputChange} />
-                <label for="password">Password</label>
+                <label for="password">Slaptažodis</label>
               </div>
 
-              <div class="text-center"><button type="submit" onClick={this.handleSubmitEvent}>Log In</button></div>
+              <div class="text-center"><button className="buttonLogin" type="submit" onClick={this.handleSubmitEvent}>Prisijungti</button></div>
               <hr class="my-4"/>
               <a class="d-block text-center mt-2 small" href="/createAccount">Registruotis</a>
             </form>

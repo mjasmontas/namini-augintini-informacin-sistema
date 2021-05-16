@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import "./sidebar.css";import {
+import "./sidebar.css";
+import {
   faUser,
   faEnvelope,
   faPaw,
@@ -15,8 +16,6 @@ import { NavItem, NavLink, Nav } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Consumer } from "../../context/UserContext";
 import UserContext from "../../context/UserContext";
-import SidebarService from "../../Services/sidebar.service";
-import AuthService from "../../Services/auth.service";
 import UserService from "../../Services/user.service";
 
 class Sidebar extends Component {
@@ -105,7 +104,7 @@ class Sidebar extends Component {
             <NavItem>
               <NavLink tag={Link} to={`/user/${context.user.id}/pets`}>
                 <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
-                Augintinių informacija
+                Informacija
               </NavLink>
             </NavItem>
             ): null }
@@ -113,22 +112,22 @@ class Sidebar extends Component {
             <NavItem>
               <NavLink tag={Link} to={`/user/${context.user.id}/reservations`}>
                 <FontAwesomeIcon icon={faClipboardCheck} className="mr-2" />
-                Registracija
+                Rezervacija
               </NavLink>
             </NavItem>
             ): null }
             {this.state.isPetTrainer ? (
             <NavItem>
               <NavLink tag={Link} to={`/trainer/${context.user.id}`}>
-                <FontAwesomeIcon icon={faClinicMedical} className="mr-2" />
-                Augintinių trenerio Visitai
+                <FontAwesomeIcon icon={faRunning} className="mr-2" />
+                Trenerio vizitai
               </NavLink>
             </NavItem>
             ): null }
             {this.state.isVeterinarian ? (
             <NavItem>
               <NavLink tag={Link} to={`/veterinarian/${context.user.id}`}>
-                <FontAwesomeIcon icon={faRunning} className="mr-2" />
+                <FontAwesomeIcon icon={faClinicMedical} className="mr-2" />
                 Veterinaro Visitai
               </NavLink>
             </NavItem>
@@ -157,77 +156,17 @@ class Sidebar extends Component {
               </NavLink>
             </NavItem>
             ): null }
+            {this.state.isUser || this.state.isPetTrainer || this.state.isVeterinarian? (
+            <NavItem>
+              <NavLink tag={Link} to={`/user/profile/${context.user.id}`}>
+                <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+                Profilis
+              </NavLink>
+            </NavItem>
+            ): null }
           </Nav>
             </div>
-          // <ul className="nav flex-column">
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/user/${context.user.id}/petfamily`}
-          //     >
-          //       Pet Family
-          //     </NavLink>
-          //   </li>
-          //     <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/user/${context.user.id}/pets`}
-          //     >
-          //       Pet Info
-          //     </NavLink>
-          //   </li>
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/user/${context.user.id}/reservations`}
-          //     >
-          //       Reservation
-          //     </NavLink>
-          //   </li>
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/trainer/${context.user.id}`}
-          //     >
-          //       Trainer Visits
-          //     </NavLink>
-          //   </li>
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/user/${context.user.id}/veterinarian`}
-          //     >
-          //       Veterinar Visits
-          //     </NavLink>
-          //   </li>
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/admin/dashboard`}
-          //     >
-          //       Dashboard
-          //     </NavLink>
-          //   </li>
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/admin/users`}
-          //     >
-          //       Users
-          //     </NavLink>
-          //   </li>
-          //   <li className="nav-item">
-          //     <NavLink
-          //       className="nav-link"
-          //       to={`/admin/messages`}
-          //     >
-          //       Messages
-          //     </NavLink>
-          //   </li>
-          // </ul>
-          
         )}
-        {/* </Nav> */}
       </Consumer>
     </div>
   );

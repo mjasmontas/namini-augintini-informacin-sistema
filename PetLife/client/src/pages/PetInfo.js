@@ -77,7 +77,7 @@ class PetInfo extends React.Component {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
     
     return (

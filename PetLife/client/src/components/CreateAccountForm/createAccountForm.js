@@ -22,7 +22,7 @@ class CreateAccountForm extends Component {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    userRoles: ["user"],
+    userRoles: ["admin"],
     errors: {
       firstName: '',
       lastName: '',
@@ -44,26 +44,26 @@ class CreateAccountForm extends Component {
     switch (name) {
       case 'firstName': 
         errors.firstName = 
-          value.length < 5
-            ? 'First Name must be 5 characters long!'
+          value.length < 1
+            ? 'Vardas neturi būti tuščias'
             : '';
         break;
       case 'lastName': 
       errors.lastName = 
         value.length < 5
-          ? 'Last Name must be 5 characters long!'
+          ? 'Pavardė neturi būti tuščia'
           : '';
       break;
       case 'email': 
         errors.email = 
           validEmailRegex.test(value)
             ? ''
-            : 'Email is not valid!';
+            : 'Elektroninis paštas yra netinkamas!';
         break;
       case 'password': 
         errors.password = 
           value.length < 8
-            ? 'Password must be 8 characters long!'
+            ? 'Slaptaždis turi būti didesnis nei 8 simboliai!'
             : '';
         break;
       default:
@@ -110,19 +110,19 @@ class CreateAccountForm extends Component {
           <div class="card-img-left d-none d-md-flex">
           </div>
           <div class="card-body">
-            <h5 class="card-title text-center">Register</h5>
+            <h5 class="card-title text-center">Registruotis</h5>
             <form class="form-signin">
             <div class="form-label-group">
               <input 
                 type="text" 
-                placeholder="First Name" 
+                placeholder="Vardas" 
                 required="" 
                 class="form-control" 
                 id="firstName" 
                 name="firstName"
                 value={this.state.firstName}
                 onChange={this.handleInputChange} />
-                <label for="firstName">First Name</label>
+                <label for="firstName">Vardas</label>
                   {errors.firstName.length > 0 && 
                     <span className='error'>{errors.firstName}</span>}
               </div>
@@ -130,42 +130,42 @@ class CreateAccountForm extends Component {
               <div class="form-label-group">
               <input 
                 type="text" 
-                placeholder="Last Name" 
+                placeholder="Pavardė" 
                 required="" 
                 class="form-control" 
                 id="lastName" 
                 name="lastName"
                 value={this.state.lastName}
                 onChange={this.handleInputChange} />
-                <label for="lastName">Last Name</label>
+                <label for="lastName">Pavardė</label>
                 {errors.lastName.length > 0 && 
                     <span className='error'>{errors.lastName}</span>}
               </div>
               <div class="form-label-group">
               <input 
                 type="text" 
-                placeholder="Phone Number" 
+                placeholder="Telefono numeris" 
                 required="" 
                 class="form-control" 
                 id="phoneNumber" 
                 name="phoneNumber"
                 value={this.state.phoneNumber}
                 onChange={this.handleInputChange} />
-                <label for="phoneNumber">Phone Number</label>
+                <label for="phoneNumber">Telefono numeris</label>
                 {/* {errors.email.length > 0 && 
                     <span className='error'>{errors.email}</span>} */}
               </div>
               <div class="form-label-group">
               <input 
                 type="email" 
-                placeholder="Email" 
+                placeholder="Elektroninis paštas" 
                 required="" 
                 class="form-control" 
                 id="email" 
                 name="email"
                 value={this.state.email}
                 onChange={this.handleInputChange} />
-                <label for="email">Email</label>
+                <label for="email">Elektroninis paštas</label>
                 {errors.email.length > 0 && 
                     <span className='error'>{errors.email}</span>}
               </div>
@@ -175,14 +175,14 @@ class CreateAccountForm extends Component {
               <div class="form-label-group">
               <input 
                 type="password" 
-                placeholder="Password" 
+                placeholder="Slaptažodis" 
                 required="" 
                 class="form-control" 
                 id="password" 
                 name="password"
                 value={this.state.password}
                 onChange={this.handleInputChange} />
-                <label for="password">Password</label>
+                <label for="password">Slaptažodis</label>
                 {errors.password.length > 0 && 
                     <span className='error'>{errors.password}</span>}
               </div>
@@ -190,7 +190,7 @@ class CreateAccountForm extends Component {
               <div class="form-label-group">
               <input 
                 type="password" 
-                placeholder="Confirm Password" 
+                placeholder="Pakartoti slaptažodį" 
                 required="" 
                 class="form-control" 
                 id="confirmPassword" 
@@ -199,23 +199,16 @@ class CreateAccountForm extends Component {
                 onChange={this.handleInputChange} />
                 {this.state.password !== this.state.confirmPassword ||
             this.state.confirmPassword === "" }
-                <label for="confirmPassword">Confirm Password</label>
+                <label for="confirmPassword">Pakartoti slaptažodį</label>
               </div>
 
               {/* <div class="text-center"><button type="submit">Registruotis</button></div> */}
               <div class="text-center">
-              <input 
-                type="submit" 
-                value="Submit"
-                onClick={this.handleSubmitEvent}
-                disabled={
-                  this.state.password !== this.state.confirmPassword ||
-                  this.state.password === ""
-                } />
+                <div class="text-center"><button className="buttonRegistration" type="submit" onClick={this.handleSubmitEvent}>Registruotis</button></div>
               </div>
               <hr class="my-4"/>
               <div class="row">
-						    <p>Already have an account? <a href="/login">Login Here</a></p>
+						    <p>Jau turite paskyrą? <a href="/login">Prisijungti</a></p>
 					    </div>
             </form>
           </div>

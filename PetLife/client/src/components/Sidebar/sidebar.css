@@ -1,14 +1,35 @@
+
 #sidebar {
-  font-size: 22px;
-  background: #f2f2f2;
-  padding: 0;
-  min-height: calc(100vh - 180px);
+  max-width: 20%;
+  height: 100vh;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
-#sidebar .nav-link {
-  padding: 17px 30px;
-  color: #f77000;
+
+.nav-link {
+  white-space: nowrap;
+  justify-content: space-between;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 5%;
+  font-size: 1.2rem !important;
 }
-#sidebar .nav-link.active {
-  background: #f77000;
-  color: #fff;
+
+.mr-2{
+  margin-right: 6px;
+}
+
+.sidebar-item-text {
+  width: 100%;
+  font-size: 1rem !important;
+}
+@media (max-width: 900px) {
+  .nav-link{
+    width: 35px;
+  }
+  #sidebar{
+    width: 80px;
+  }
 }

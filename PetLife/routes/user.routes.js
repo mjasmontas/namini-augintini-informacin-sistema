@@ -52,6 +52,11 @@ module.exports = function(app) {
     controller.updateUser
   );
   
+  app.put(
+    "/api/user/profile/:id",
+    controller.updateProfileUser
+  );
+  
   app.delete(
     "/api/admin/user/:id",
     [authJwt.verifyToken], 
