@@ -11,19 +11,27 @@ class ReservationService {
     return axios.get('/api/user/' + id + '/reservations', { headers: authHeader()  });
   }
 
-  addNewReservation(owner, pet, petName, startDate, endDate, clientNotes, veterinarianVisit, veterinarianNote, trainerVisit, trainerNote, price) {
+  getUserReservation(id) {
+    return axios.get('/api/admin/reservation/' + id, { headers: authHeader()  });
+  }
+
+  updateReservation(id, status){
+    return axios.put('/api/admin/reservation/' + id, { status: status })
+  }
+
+  addNewReservation(owner, ownerName, ownerPhoneNumber, pet, petName, startDate, endDate, clientNotes, price, createdAt, status) {
     return axios.post('/api/user/' + owner + '/createReservation', { 
         owner,
+        ownerName,
+        ownerPhoneNumber,
         pet,
         petName,
         startDate,
         endDate,
         clientNotes,
-        veterinarianVisit,
-        veterinarianNote,
-        trainerVisit,
-        trainerNote,
-        price
+        price,
+        createdAt,
+        status
     });
   }
 

@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar/sidebar";
 import Header from "./components/Header/header";
 import PetUpdate from "./components/PetUpdate/petUpdate";
 import UserUpdate from "./components/UserUpdate/userUpdate";
+import adminReservation from "./components/adminReservation/adminReservation";
 import Messages from "./pages/Messages";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
@@ -17,6 +18,8 @@ import TrainerVisit from "./pages/TrainerVisit";
 import PetInfo from "./pages/PetInfo";
 
 import CreatePet from "./pages/CreatePet";
+import SendMessage from "./pages/SendMessage";
+import AdminReservation from "./pages/AdminReservation";
 import Profile from "./pages/Profile";
 import CreateReservation from "./pages/CreateReservation";
 import PetFamily from "./pages/PetFamily";
@@ -41,22 +44,6 @@ class App extends React.Component {
     if (user){
       this.setUser(user)
     }
-    
-    // if token exists
-    // go ask server for user associated with token
-    // if (Auth.isLoggedIn()) {
-      
-    // console.log("ASAADSSAS")
-    //   axios
-    //     .get("/api/me", {
-    //       headers: {
-    //         Authorization: "Bearer " + Auth.getToken()
-    //       }
-    //     })
-    //     .then(response => {
-    //       this.setUser(response.data);
-    //     });
-    // }
   }
 
   userHomePage = user => {
@@ -130,8 +117,23 @@ class App extends React.Component {
                 />
                 <ProtectedRoutes
                   exact
+                  path="/admin/message/:id"
+                  component={SendMessage}
+                />
+                <ProtectedRoutes
+                  exact
                   path="/user/profile/:id"
                   component={Profile}
+                />                
+                <ProtectedRoutes
+                  exact
+                  path="/admin/reservation/:id"
+                  component={adminReservation}
+                />
+                <ProtectedRoutes
+                  exact
+                  path="/admin/reservations"
+                  component={AdminReservation}
                 />
                 <ProtectedRoutes
                   exact

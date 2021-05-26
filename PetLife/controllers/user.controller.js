@@ -111,7 +111,7 @@ exports.updateProfileUser = (req, res) => {
   User.findByIdAndUpdate(
     req.params.id,
     {$set: {firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email,phoneNumber: req.body.phoneNumber
-      ,dateOfBirth: req.body.dateOfBirth, address: req.body.address, city: req.body.city, zipCode: req.body.zipCode}}, 
+      ,years: req.body.years, address: req.body.address, city: req.body.city, zipCode: req.body.zipCode}}, 
     function(err, updated) {
       if (err) {
         console.log(err);

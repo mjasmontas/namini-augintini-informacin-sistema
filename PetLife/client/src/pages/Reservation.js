@@ -29,7 +29,7 @@ class ReservationInformation extends Component {
         reservations: res.data.reservation,
         mounted: true,
         isLoading: false
-      }, this.ReservationData());
+      });
     });
   }
 
@@ -88,7 +88,7 @@ class ReservationInformation extends Component {
               to={`/user/${user.id}/createReservation`}
               className="btn btn-warning btn-lg"
             >
-              Create A Reservation!
+              Sukurti rezervaciją!
             </Link>
         <Row>
         {this.state.reservations < 1 ? (
@@ -104,9 +104,7 @@ class ReservationInformation extends Component {
           name={item.petName}
           startDate={item.startDate}
           endDate={item.endDate}
-          clientNotes={item.clientNotes}
-          veterinarianVisit={item.veterinarianVisit}
-          trainerVisit={item.trainerVisit}
+          status={item.status}
           price={item.price}
           cancelReservation={this.cancelReservation}
           />

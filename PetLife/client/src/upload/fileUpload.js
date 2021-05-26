@@ -15,12 +15,13 @@ class FileUpload extends Component {
   onChange = e => {
     const files = Array.from(e.target.files);
     this.setState({ uploading: true });
-
+    console.log(e.target)
     const formData = new FormData();
 
     files.forEach((file, i) => {
       formData.append(i, file);
     });
+    console.log(formData)
 
     fetch("/api/image-upload", {
       method: "POST",
@@ -28,6 +29,7 @@ class FileUpload extends Component {
     })
       .then(res => res.json())
       .then(images => {
+        console.log(images)
         this.setState({
           uploading: false,
           images: images,

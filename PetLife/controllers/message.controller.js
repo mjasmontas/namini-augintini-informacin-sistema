@@ -6,9 +6,20 @@ exports.getAllMessages = (req, res) => {
         res.json(found);
       })
       .catch(function(err) {
-        console.log("There are no pets")
+        console.log("There are no messages")
         res.status(500).json(err);
       });
+}
+
+exports.getMessage = (req, res) => {
+  Message.findById(req.params.id)
+  .then(function(found) {
+    res.json(found);
+  })
+  .catch(function(err) {
+    console.log("Message does not exist")
+    res.status(500).json(err);
+  });
 }
 
 exports.deleteMessage = (req, res) => {

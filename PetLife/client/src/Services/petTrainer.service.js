@@ -6,14 +6,15 @@ class PetTrainerService {
     return axios.get('/api/trainer/' + id, { headers: authHeader()  });
   }
 
-  addNewTrainerVisit(id, petOwnerName, petOwnerPhoneNumber, petName, trainersNote, startDate, endDate) {
+  addNewTrainerVisit(id, petOwnerName, petOwnerPhoneNumber, petName, petType, petSize, trainersNote, startDate) {
     return axios.post('/api/user/' + id + '/trainerVisit', { 
         petOwnerName,
         petOwnerPhoneNumber,
         petName,
+        petType,
+        petSize,
         trainersNote,
-        startDate,
-        endDate
+        startDate
     });
   }
 

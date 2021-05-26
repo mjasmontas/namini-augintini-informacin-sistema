@@ -17,6 +17,12 @@ module.exports = function(app) {
     controller.getAllMessages
   );
 
+  app.get(
+    "/api/admin/message/:id",
+    [authJwt.verifyToken, isAdmin], 
+    controller.getMessage
+  );
+
   app.post(
     "/api/message",
     controller.CreateMessage

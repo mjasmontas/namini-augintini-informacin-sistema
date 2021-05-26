@@ -2,7 +2,7 @@ const Reservation = require("../models/Reservation");
 const User = require("../models/User");
 
 exports.getAllReservations = (req, res) => {
-    Reservation.find({})
+    Reservation.find({}).sort({ createdAt: 'desc'})
       .then(function(found) {
         res.json(found);
       })
@@ -19,6 +19,32 @@ exports.getReservation = (req, res) => {
       .catch(function(err) {
         res.status(500).json(err);
       });
+}
+
+exports.getUserReservation = (req, res) => {
+  Reservation.findById(req.params.id)
+    .then(function(found) {
+      res.json(found);
+    })
+    .catch(function(err) {
+      res.status(500).json(err);
+    });
+}
+
+exports.updateReservation = (req, res) => {
+  Reservation.findByIdAndUpdate(
+    req.params.id,
+    {$set: {status: req.body.status}}, 
+    function(err, updated) {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log("else: " + updated);
+        res.send(updated);
+      }
+    }
+  )
 }
 
 exports.createReservation = (req, res) => {

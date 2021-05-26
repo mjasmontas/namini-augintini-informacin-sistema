@@ -163,12 +163,15 @@ componentDidMount() {
     const { isLoading } = this.state;
  
     if (isLoading) {
-      return <p>Loading ...</p>;
+      return <p>Kraunama ...</p>;
     }
 
     return (
       <div className="content">
       <Container fluid>
+        <Container>
+          <h2>Pagrindinis </h2>
+        </Container>
         <Row>
             <Col lg="3" md="6" sm="12">
               <Card className="text-center">

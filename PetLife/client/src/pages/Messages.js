@@ -64,6 +64,10 @@ class ReservationInformation extends Component {
       });
   };
 
+  answerMessage = messageId => {
+    window.location = `/admin/message/${messageId}`;
+  };
+
   render() {
     const { isLoading } = this.state;
  
@@ -75,7 +79,7 @@ class ReservationInformation extends Component {
       <div className="content">
       <Container fluid>
         <Container>
-          <h2>Klietų Pranešimai </h2>
+          <h2>Klientų Pranešimai </h2>
         </Container>
         <Row>
         {this.state.messages < 1 ? (
@@ -93,39 +97,13 @@ class ReservationInformation extends Component {
             subject={item.subject}
             message={item.message}
             removeMessage={this.removeMessage}
+            answerMessage={this.answerMessage}
           />
         ))}
           </Row>
           
           </Container>
       </div>
-      // <div className="PetSitter">
-      //   <div className="row">
-      //     <div className="col-6">
-      //       <h2>Klietų Pranešimai </h2>
-      //     </div>
-      //   </div>
-      //   <div className="row">
-      //     <div className="col-12">
-      //       {this.state.messages < 1 ? (
-      //         <div className="alert alert-warning mt-4" role="alert">
-      //           There are no messages
-      //         </div>
-      //       ) : null}
-      //   {this.state.messages.map(item => (
-      //     <Message
-      //       key={item._id}
-      //       id={item._id}
-      //       name={item.name}
-      //       email={item.email}
-      //       subject={item.subject}
-      //       message={item.message}
-      //       removeMessage={this.removeMessage}
-      //     />
-      //   ))}
-      //     </div>
-      //   </div>
-      // </div>
     );
   }
 }

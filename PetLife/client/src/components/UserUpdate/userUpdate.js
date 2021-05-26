@@ -257,7 +257,6 @@ class UserUpdateForm extends Component {
               </div>
               <div class="row gutters buttons">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                  <div class="text-right">
                     <button
                       type="button"
                       onClick={this.submitData}
@@ -267,7 +266,6 @@ class UserUpdateForm extends Component {
                     >
                       Atnaujinti
                     </button>
-                  </div><div class="text-right">
                     <button
                       type="button"
                       onClick={this.deleteUser}
@@ -277,7 +275,6 @@ class UserUpdateForm extends Component {
                     >
                       Ištrinti
                     </button>
-                  </div>
                 </div>
               </div>
             </div>

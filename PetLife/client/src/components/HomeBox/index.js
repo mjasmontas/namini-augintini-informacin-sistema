@@ -86,7 +86,7 @@ class HomeBox extends Component {
 
         <div className="section-title">
           <h2>Paslaugos</h2>
-          <h3>Musu siulomos <span>Paslaugos</span></h3>
+          <h3>Mūsų siūlomos <span>Paslaugos</span></h3>
         </div>
 
         <div className="row">
@@ -101,8 +101,8 @@ class HomeBox extends Component {
           <div className="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div className="icon-box">
               <div className="icon"><i className="bx bx-file"></i></div>
-              <h4 className="title"><a href="">Registracija internetu</a></h4>
-              <p className="description">Jūsų klientai gali užsiregistruoti į užsiėmimus, renginius, privačius mokymus, terapiją ir paketus internetu.</p>
+              <h4 className="title"><a href="">Rezervacija internetu</a></h4>
+              <p className="description">Klientai, visus savo augintinius gali užrezervuoti greitai ir patogiai per internetą</p>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ class HomeBox extends Component {
             <div className="icon-box">
               <div className="icon"><i className="bx bx-tachometer"></i></div>
               <h4 className="title"><a href="">Darbuotojų valdymas</a></h4>
-              <p className="description">Darbuotojai, planuodami laiko kortelių valdymą, jus aprėpė.</p>
+              <p className="description">Darbuotojams yra sukurti specialūs puslapiai, kuriuose jie mato savo vizito laikus</p>
             </div>
           </div>
 

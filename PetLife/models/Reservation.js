@@ -7,12 +7,12 @@ const reservationSchema = new mongoose.Schema({
     ref: 'user',
     // required: true,
   },
-  // ownerFirstName: {
-  //   type: String
-  // },
-  // ownerLastName: {
-  //   type: String
-  // },
+  ownerName: {
+    type: String
+  },
+  ownerPhoneNumber: {
+    type: String
+  },
   pet: {
     type: Schema.Types.ObjectId,
     ref: 'pet',
@@ -35,6 +35,9 @@ const reservationSchema = new mongoose.Schema({
   },
     price: {
     type: Number,
+  },
+  createdAt: {
+    type: Date
   }
 });
 

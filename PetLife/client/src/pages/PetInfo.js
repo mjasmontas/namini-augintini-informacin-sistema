@@ -110,56 +110,6 @@ class PetInfo extends React.Component {
           
           </Container>
       </div>
-
-      // <Col md={6} lg={3} xs={12}>
-      // <Container>
-      //   <h2>Augintinio informacija</h2>
-      // </Container>
-      // <Row>
-      //   {this.state.petSitters < 1 ? (
-      //     <div className="alert alert-warning mt-4" role="alert">
-      //       Jus neturite prisideja jokiu augintiniu
-      //     </div>
-      //   ) : null}
-      //   </Row>
-        // // <Row>
-        // <Col lg="3" md="6" sm="12">
-        //       <Card className="text-center">
-        //         <CardBody>
-        //             <CardTitle tag="p">Klientų skaičius</CardTitle>
-        //               <div className="numbers">
-        //                 <hr />
-        //                 <p className="card-category">{this.state.usersNumber}</p>
-        //                 <p />
-        //               </div>
-        //         </CardBody>
-        //       </Card>
-        //   </Col>
-      // <div className="col-12 col-md-6 col-lg-3">
-      //   <div className="container">
-      //     <h2>Augintinio informacija</h2>
-      //   </div>
-      //   <div className="row">
-      //       {this.state.petSitters < 1 ? (
-      //         <div className="alert alert-warning mt-4" role="alert">
-      //           Jus neturite prisideja jokiu augintiniu
-      //         </div>
-      //       ) : null}
-        // {this.state.pets.map(item => (
-        //   <PetInfoCard
-        //     key={item._id}
-        //     id={item._id}
-        //     img={item.image}
-        //     name={item.name}
-        //     type={item.type}
-        //     birthday={item.birthday}
-        //     temperament={item.temperament}
-        //     size={item.size}
-        //     deletePet={this.deletePet}
-        //   />
-        // ))}
-      // </div>
-      // </div>
     );
   }
 }

@@ -22,7 +22,7 @@ class CreateAccountForm extends Component {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    userRoles: ["admin"],
+    userRoles: ["user"],
     errors: {
       firstName: '',
       lastName: '',

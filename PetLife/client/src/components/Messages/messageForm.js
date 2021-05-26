@@ -23,6 +23,8 @@ function Message(props) {
       <CardText>{props.message}</CardText>
         <CardLink to="" onClick={() => props.removeMessage(props.id)}
         className="btn btn-primary">Ištrinti</CardLink>
+        <CardLink to="" onClick={() => props.answerMessage(props.id)}
+        className="btn btn-primary">Atskayti</CardLink>
       </CardBody>
     </Card>
   </Col>

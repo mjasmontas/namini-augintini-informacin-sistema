@@ -136,7 +136,7 @@ class Sidebar extends Component {
             <NavItem>
               <NavLink tag={Link} to={`/admin/dashboard`}>
                 <FontAwesomeIcon icon={faHome} className="mr-2" />
-                Augintiniai
+                Pagrindinis
               </NavLink>
             </NavItem>
             ): null }
@@ -153,6 +153,14 @@ class Sidebar extends Component {
               <NavLink tag={Link} to={`/admin/messages`}>
                 <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
                 Pranešimai
+              </NavLink>
+            </NavItem>
+            ): null }
+            {this.state.isAdmin ? (
+            <NavItem>
+              <NavLink tag={Link} to={`/admin/reservations`}>
+                <FontAwesomeIcon icon={faClipboardCheck} className="mr-2" />
+                Rezervacijos
               </NavLink>
             </NavItem>
             ): null }

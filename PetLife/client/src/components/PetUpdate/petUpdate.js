@@ -73,8 +73,7 @@ class PetUpdate extends React.Component {
   };
 
   handleInputChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+    this.setState({ [event.target.name]: event.target.value });
   };
 
   handleDateChange = (date) => {
@@ -151,6 +150,7 @@ class PetUpdate extends React.Component {
                       <input
                         type="text"
                         className="form-control"
+                        name="petName"
                         id="petname"
                         placeholder="Įveskite augintinio vardą"
                         onChange={this.handleInputChange}
@@ -165,7 +165,8 @@ class PetUpdate extends React.Component {
                       <input
                         type="text"
                         className="form-control"
-                        id="petname"
+                        id="years"
+                        name="years"
                         placeholder="Įveskite augintinio amžių"
                         onChange={this.handleInputChange}
                         value={this.state.years}
@@ -179,6 +180,7 @@ class PetUpdate extends React.Component {
                         type="text"
                         className="form-control"
                         id="allergies"
+                        name="allergies"
                         rows="2"
                         placeholder="Įveskite augintinio alergijas"
                         onChange={this.handleInputChange}
@@ -193,6 +195,7 @@ class PetUpdate extends React.Component {
                         type="text"
                         className="form-control"
                         id="temperament"
+                        name="temperament"
                         rows="2"
                         placeholder="Apibūdinkite augintinio temperamentą"
                         onChange={this.handleInputChange}

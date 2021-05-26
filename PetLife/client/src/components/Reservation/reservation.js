@@ -10,26 +10,26 @@ import {
 import moment from 'moment'
 
 function Reservation(props) {
-  // let bday = props.birthday.splice(0, -12)
-  const sDate = moment(props.startDate).format('YYYY-MM-DD')
-  const eDate = moment(props.endDate).format('YYYY-MM-DD')
+  const sDate = moment(props.startDate).format('DD-MM-YYYY')
+  const eDate = moment(props.endDate).format('DD-MM-YYYY')
 
   return (
-    <Col key={props.id} md={4}>
+    <Col key={props.id} md={4} style={{padding: 10}}>
     <Card className="text-center">
       <CardBody>
       <CardTitle tag="p">Data: {sDate} - {eDate}</CardTitle>
         <div className="data">
           <hr />
           <p className="card-category">Augintinio Vardas: {props.name}</p>
-          <p className="card-category">Gimimo Data: {props.birthday}</p>
-          <p className="card-category">Dydis: {props.size}</p>
+          {props.status === 'laukiamas'? <p className="card-category" style={{color:'black', fontWeight: "bold"}}>Statusas: {props.status}</p> : null}
+          {props.status === 'atšauktas'? <p className="card-category" style={{color:'red', fontWeight: "bold"}}>Statusas: {props.status}</p> : null}
+          {props.status === 'patvirtintas'? <p className="card-category" style={{color:'green', fontWeight: "bold"}}>Statusas: {props.status}</p> : null}
           <p className="card-category">Kaina: {props.price}$</p>
           <p />
           <hr />
         </div>
         <CardLink to="" onClick={() => props.cancelReservation(props.id)}
-        className="btn btn-primary">Ištrinti</CardLink>
+        className="btn btn-primary">Atšaukti</CardLink>
       </CardBody>
     </Card>
   </Col>

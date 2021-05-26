@@ -14,6 +14,7 @@ class Visits extends Component {
   state = {
     mounted: false,
     refreshed: false,
+    phoneNumber: "862318161",
     visits: [],
     test: "",
     isLoading: false
@@ -23,6 +24,7 @@ class Visits extends Component {
     this.setState({ isLoading: true });
     VeterinarService.getAllVetVisits(this.context.user.id)
     .then(response => {
+      console.log(response)
       this.setState({
         visits: response.data.veterinarianVisits,
         mounted: true,
@@ -89,10 +91,10 @@ class Visits extends Component {
           id={item._id}
           ownerName={item.petOwnerName}
           petName={item.petName}
-          petOwnerPhoneNumber={item.petOwnerPhoneNumber}
+          phoneNumber={this.state.phoneNumber}
           petType={item.petType}
           petSize={item.petSize}
-          trainersNote={item.trainersNote}
+          veterinarianNotes={item.veterinarianNotes}
           date={item.startDate}
           removeVisit={this.removeVisit}
           />

@@ -27,6 +27,8 @@ class CreateReservation extends React.Component {
     petName: "",
     clientNotes: "",
     price: 0.0,
+    petSize: "Mažas",
+    petType: "Šuo",
     dayPrice: 7.5,
     veterinarianVisit: false,
     selectVeterinarian: false,
@@ -37,6 +39,8 @@ class CreateReservation extends React.Component {
     startDate: new Date(),
     endDate: new Date(),
     today: new Date(),
+    createdAt: new Date(),
+    status: "laukiamas",
     mounted: false,
     refreshed: false,
     isLoading: false,
@@ -48,7 +52,6 @@ class CreateReservation extends React.Component {
     let trainer;
     let currentComponent = this;
     PetService.getAllUsersPets(this.context.user.id).then((response) => {
-      // console.log(response.data.pets);
       const pets = response.data.pets.map((pet) => ({
         value: pet.name,
         label: pet._id,
@@ -169,16 +172,21 @@ class CreateReservation extends React.Component {
           this.state.vet = this.state.veterinarians[size].label;
         }
       }
+      console.log(this.state.ownerPhoneNumber)
+      console.log(this.state.petName)
+      console.log(this.state.petType)
+      console.log(this.state.petSize)
+      console.log(this.state.veterinarianNote)
 
       VeterinarService.addNewVetVisit(
         this.state.vet,
-        this.context.user.id,
         this.state.ownerFistName + " " + this.state.ownerLastName,
-        this.state.pet,
+        this.state.ownerPhoneNumber,
         this.state.petName,
+        this.state.petType,
+        this.state.petSize,
         this.state.veterinarianNote,
-        this.state.startDate,
-        this.state.endDate
+        this.state.startDate
       );
     }
 
@@ -197,25 +205,26 @@ class CreateReservation extends React.Component {
         this.state.ownerFistName + " " + this.state.ownerLastName,
         this.state.ownerPhoneNumber,
         this.state.petName,
+        this.state.petType,
+        this.state.petSize,
         this.state.trainerNote,
-        this.state.startDate,
-        this.state.endDate
+        this.state.startDate
       );
     }
 
     let reservationUrl = `/user/${this.context.user.id}/reservations`;
     ReservationService.addNewReservation(
       this.context.user.id,
+      this.state.ownerFistName + " " + this.state.ownerLastName,
+      this.state.ownerPhoneNumber,
       this.state.pet,
       this.state.petName,
       this.state.startDate,
       this.state.endDate,
       this.state.clientNotes,
-      this.state.veterinarianVisit,
-      this.state.veterinarianNote,
-      this.state.trainerVisit,
-      this.state.trainerNote,
-      this.state.price
+      this.state.price,
+      this.state.createdAt,
+      this.state.status
     ).then(function () {
       window.location = reservationUrl;
     });

@@ -17,18 +17,17 @@ import {
 import moment from 'moment'
 
 function Visit(props) {
-  // let bday = props.birthday.splice(0, -12)
-  const test = moment(props.date).format('YYYY-MM-DD')
+  const test = moment(props.date).format('DD-MM-YYYY')
   return (
-    <Col key={props.id} md={4}>
-    <Card className="text-center">
+    <Col key={props.id} md={6}>
+    <Card className="text-center" style={{width: 400}}>
       <CardBody>
       <CardTitle tag="p">Data: {test}</CardTitle>
         <div className="data">
           <hr />
           <p className="card-category">Šeimininko Vardas: {props.ownerName}</p>
           <p className="card-category">Augintinio Vardas: {props.petName}</p>
-          <p className="card-category">Šeimininko Numeris: {props.petOwnerPhoneNumber}</p>
+          <p className="card-category">Šeimininko Numeris: {props.phoneNumber}</p>
           <p className="card-category">Augintinio Tipas: {props.petType}</p>
           <p className="card-category">Augintinio Dydis: {props.petSize}</p>
           

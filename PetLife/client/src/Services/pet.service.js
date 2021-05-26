@@ -23,11 +23,11 @@ class PetService {
     });
   }
 
-  updatePet(id, name, type, birthday, allergies, temperament, size){
+  updatePet(id, name, type, years, allergies, temperament, size){
     return axios.put('/api/pet/' + id, { 
       name,
       type,
-      birthday,
+      years,
       allergies,
       temperament,
       size,

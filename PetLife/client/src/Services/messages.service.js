@@ -6,6 +6,10 @@ class MessageService {
     return axios.get('/api/admin/messages', { headers: authHeader()  });
   }
 
+  getMessage(id) {
+    return axios.get('/api/admin/message/' + id, { headers: authHeader()  });
+  }
+
   addNewMessage( name, email, subject, message) {
     return axios.post('/api/message', { 
         name,

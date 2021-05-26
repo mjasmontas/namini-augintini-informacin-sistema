@@ -18,10 +18,10 @@ import moment from 'moment'
 
 function TrainerVisit(props) {
 
-  const test = moment(props.date).format('YYYY-MM-DD')
+  const test = moment(props.date).format('DD-MM-YYYY')
   return (
-    <Col key={props.id} md={4}>
-    <Card className="text-center">
+    <Col key={props.id} md={6}>
+    <Card className="text-center" style={{width: 400}}>
       <CardBody>
       <CardTitle tag="p">Data: {test}</CardTitle>
         <div className="data">

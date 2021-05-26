@@ -28,8 +28,8 @@ function PetInfoCard(props) {
   const placeholderImg =
     "https://www.missingdogsuk.co.uk/wp-content/plugins/wp-job-manager-resumes/assets/images/candidate.png";
     return (
-      <Col key={props.id} md={4}>
-        <Card className="text-center">
+      <Col key={props.id} md={4} style={{padding: 10}}>
+        <Card className="text-center" >
         <CardImg top width="20%" top heigth="10%" src={props.image || placeholderImg} style={imgStyle} alt="Card image cap" />
           <CardBody>
           <CardTitle tag="p">Vardas: {props.name}</CardTitle>

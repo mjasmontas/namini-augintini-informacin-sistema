@@ -18,6 +18,17 @@ module.exports = function(app) {
   );
 
   app.get(
+    "/api/admin/reservation/:id",
+    [authJwt.verifyToken, isAdmin], 
+    controller.getUserReservation
+  );
+
+  app.put(
+    "/api/admin/reservation/:id",
+    controller.updateReservation
+  );
+
+  app.get(
     "/api/reservation/:id",
     [authJwt.verifyToken], 
     controller.getReservation
@@ -32,11 +43,5 @@ module.exports = function(app) {
     "/api/reservation/:id",
     [authJwt.verifyToken], 
     controller.deleteReservation
-  );
-  
-  app.put(
-    "/api/reservation/:id",
-    [authJwt.verifyToken], 
-    controller.updateReservation
   );
 }

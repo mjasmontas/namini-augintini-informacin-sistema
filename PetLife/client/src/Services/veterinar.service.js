@@ -6,12 +6,13 @@ class VeterinarianService {
     return axios.get('/api/veterinarian/' + id, { headers: authHeader()  });
   }
 
-  addNewVetVisit(id, petOwner, petOwnerName, pet, petName, veterinarianNotes, startDate) {
+  addNewVetVisit(id, petOwnerName,ownerPhoneNumber, petName, petType, petSize, veterinarianNotes, startDate) {
     return axios.post('/api/user/' + id + '/veterinarianVisit', { 
-        petOwner,
         petOwnerName,
-        pet,
+        ownerPhoneNumber,
         petName,
+        petType,
+        petSize,
         veterinarianNotes,
         startDate
     });

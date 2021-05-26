@@ -14,13 +14,13 @@ class UserService {
     return axios.put('/api/admin/user/' + id, { roles: roles })
   }
 
-  updateProfileUser(id, firstName, lastName, email, phoneNumber, dateOfBirth, address, city, zipCode){
+  updateProfileUser(id, firstName, lastName, email, phoneNumber, years, address, city, zipCode){
     return axios.put('/api/user/profile/' + id, { 
       firstName: firstName,
       lastName: lastName,
       email: email,
       phoneNumber: phoneNumber,
-      dateOfBirth: dateOfBirth,
+      years: years,
       address: address,
       city: city,
       zipCode: zipCode    

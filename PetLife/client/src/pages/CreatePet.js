@@ -24,11 +24,10 @@ class CreatePet extends React.Component {
   };
 
   setFile = filePath => {
-    console.log(filePath);
     this.setState({
       image: filePath
     });
-    console.log(this.state);
+    console.log(this.state.image)
   };
 
   submitData = event => {
@@ -65,7 +64,7 @@ class CreatePet extends React.Component {
     return (
       <div className="container">
         <div class="row gutters">
-          <h4 class="text-right">Atnaujinti augintinį</h4>
+          <h4 class="text-right">Sukurti augintinį</h4>
         </div>
         <div className="row gutters">
           <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -107,13 +106,13 @@ class CreatePet extends React.Component {
                       />
                     </div>
                   </div>
-                  
+{/*                   
                   <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
                     <div className="form-group">
                       <label>Augintinio nuotauka</label>
                       <FileUpload onComplete={this.setFile} />
                     </div>
-                  </div>
+                  </div> */}
                   
                   <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-12">
                     <div className="form-group">
